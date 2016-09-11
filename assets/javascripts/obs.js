@@ -29,7 +29,6 @@ $.fn.textWidth = function(text, font) {
   var second = $('.second');
   var fireStates = database.ref('states');
 
-
   var monthArr = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
   var musicArr = ['eclipse.mp3', 'nova.mp3', 'spectre.mp3']
 
@@ -37,9 +36,8 @@ $.fn.textWidth = function(text, font) {
 
   bgAudio.prop('volume', 0);
 
-  fireStates.on('value', function(result) {
-    var states = result.val();
-    switch (states.scene) {
+  fireStates.child('scene').on('value', function(result) {
+    switch (result.val()) {
       case 'waiting':
         bgVideo[0].play();
         bgAudio[0].pause();
@@ -49,7 +47,7 @@ $.fn.textWidth = function(text, font) {
           bgAudio[0].play();
           bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
         }
-        
+
         waiting.fadeIn();
         ingame.fadeOut();
         break;
@@ -84,8 +82,9 @@ $.fn.textWidth = function(text, font) {
         });
         break;
     }
-
-    switch (states.half) {
+  });
+  fireStates.child('half').on('value', function(result) {
+    switch (result.val()) {
       case 'first':
         first.removeClass('semitrans');
         second.addClass('semitrans');
@@ -99,8 +98,7 @@ $.fn.textWidth = function(text, font) {
         second.removeClass('semitrans');
         break;
     }
-
-  });
+  })
   var fireScore = database.ref('score');
   fireScore.on('value', function(result) {
     var score = result.val();
