@@ -29,6 +29,12 @@ $.fn.textWidth = function(text, font) {
   var second = $('.second');
   var fireStates = database.ref('states');
 
+
+  var monthArr = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+  var musicArr = ['eclipse.mp3', 'nova.mp3', 'spectre.mp3']
+
+  var waitingCounter = 0;
+
   bgAudio.prop('volume', 0);
 
   fireStates.on('value', function(result) {
@@ -36,7 +42,10 @@ $.fn.textWidth = function(text, font) {
     switch (states.scene) {
       case 'waiting':
         bgVideo[0].play();
-        bgAudio[0].play();
+        bgAudio[0].pause();
+        bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
+        bgAudio[0].load();
+        bgAudio[0].oncanplaythrough = bgAudio[0].play();
         bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
         waiting.fadeIn();
         ingame.fadeOut();
@@ -55,7 +64,6 @@ $.fn.textWidth = function(text, font) {
         var year = $('.ingame .season .year');
         var date = $('.ingame .season .date');
 
-        var monthArr = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
         year.html(now.getFullYear() + ' <span class="lightblue">S4</span>');
         date.html(monthArr[now.getMonth()] + ' ' + pad(now.getDate(), 2));
 
