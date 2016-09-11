@@ -39,6 +39,24 @@ connectedRef.on("value", function(snap) {
     database.ref('states/half').set(btn.val());
   })
 
+  database.ref('states').on('value', function(result) {
+    var states = result.val();
+    sceneButtons.filter('[value="' + states.scene + '"]').trigger('click');
+    halfButtons.filter('[value="' + states.half + '"]').trigger('click');
+  });
+
+  $.each(['first', 'second'], function(i, halfkey) {
+    database.ref('score').child(halfkey).on('value', function(result) {
+      var half = result.val();
+      var halfClass = '.' + halfkey;
+      $(halfClass + '.clan1').val(half.clan1.name);
+      $(halfClass + '.clan2').val(half.clan2.name);
+      $(halfClass + '.rule1').val(half.clan1.rule);
+      $(halfClass + '.rule2').val(half.clan2.rule);
+      $(halfClass + '.score1').val(half.clan1.score);
+      $(halfClass + '.score2').val(half.clan2.score);
+    });
+  });
   updateButtons.bind('click', function(event) {
     event.preventDefault();
     var btn = $(this);
