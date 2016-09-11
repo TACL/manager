@@ -45,8 +45,11 @@ $.fn.textWidth = function(text, font) {
         bgAudio[0].pause();
         bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
         bgAudio[0].load();
-        bgAudio[0].oncanplaythrough = bgAudio[0].play();
-        bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
+        bgAudio[0].oncanplaythrough = function() {
+          bgAudio[0].play();
+          bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
+        }
+        
         waiting.fadeIn();
         ingame.fadeOut();
         break;
