@@ -17,18 +17,21 @@ var database = firebase.database();
   var updateButtons = $('.btn-update');
 
   sceneButtons.bind('click', function(event) {
+    event.preventDefault();
     sceneButtons.removeClass('active');
     var btn = $(this).addClass('active');
     database.ref('states/scene').set(btn.val());
   });
 
   halfButtons.bind('click', function(event) {
+    event.preventDefault();
     halfButtons.removeClass('active');
     var btn = $(this).addClass('active');
     database.ref('states/half').set(btn.val());
   })
 
   updateButtons.bind('click', function(event) {
+    event.preventDefault();
     var btn = $(this);
     var half = btn.val();
 
