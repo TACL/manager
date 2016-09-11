@@ -13,7 +13,6 @@ connectedRef.on("value", function(snap) {
   if (snap.val() === true) {
     $('#loading').fadeOut();
   } else {
-    $('#loading h1').text('失去連線');
     $('#loading').fadeIn();
   }
 });
