@@ -8,6 +8,16 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
+var connectedRef = database.ref(".info/connected");
+connectedRef.on("value", function(snap) {
+  if (snap.val() === true) {
+    $('#loading').fadeOut();
+  } else {
+    $('#loading h1').text('失去連線');
+    $('#loading').fadeIn();
+  }
+});
+
 (function() {
   var btnIngame = $('#btn_scene_ingame');
   var btnWaiting = $('#btn_scene_waiting');
