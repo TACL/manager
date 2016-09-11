@@ -11,9 +11,9 @@ var database = firebase.database();
 var connectedRef = database.ref(".info/connected");
 connectedRef.on("value", function(snap) {
   if (snap.val() === true) {
-    $('#loading').fadeOut();
+    $('#loading').stop(true, false).fadeOut();
   } else {
-    $('#loading').fadeIn();
+    $('#loading').stop(true, false).fadeIn();
   }
 });
 
