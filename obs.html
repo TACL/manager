@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TACL OBS 畫面</title>
+<style>
+  body {
+    margin: 0px;
+    background: #000;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1920;
+    height: 1080;
+    z-index: -100;
+  }
+  @font-face {
+    font-family: 華康粗黑體;
+    src: url(assets/fonts/DFHei-Bd-HK-BF.woff);
+  }
+  #date {
+    font-family: Arial Black, sans-serif;
+    position: absolute;
+    text-align: center;
+    top: 15px;
+    font-size: 48px;
+    width: 100%;
+    opacity: .2;
+  }
+  #scoreboard {
+    font-family: 華康粗黑體, 微軟正黑體, Arial Narrow, sans-serif;
+    font-weight: 100;
+    text-align: center;
+    text-shadow: 4px 4px 6px #000;
+    /*background: rgba(0,0,0,0.3);*/
+    margin: auto;
+    margin-top: 500px;
+    color: white;
+    padding: 2rem;
+    width: 100%;
+  }
+
+  .semitrans {
+    opacity: .3;
+  }
+  .halftext {
+    font-size: 30px;
+    padding-bottom: 20px;
+  }
+  .lightblue {
+    color: #11cfff;
+  }
+  .lightgreen {
+    color: #00ff00;
+  }
+
+  #scoreboard .score {
+    font-size: 58px;
+    padding-bottom: 50px;
+  }
+
+  #ingame_overlay {
+    position: absolute;
+    color: #fff;
+    background-image: url('assets/images/ingame_overlay_bg.png');
+    top: 901px;
+    left: 291px;
+    width: 1063px;
+    height: 96px;
+    display: none;
+  }
+
+  #ingame_overlay > div {
+      position: absolute;
+      width: inherit;
+  }
+
+  .ingame .scoreboard {
+    font-family: 華康粗黑體, 微軟正黑體, Arial Narrow, sans-serif;
+    font-size: 26px;
+    padding-top: 15px;
+    padding-left: 200px;
+    line-height: 32px;
+    width: inherit;
+    opacity: .9;
+  }
+
+  .ingame .season {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 30px;
+    font-family: Arial Black;
+    text-align: right;
+    opacity: .5;
+    width: 180px;
+    white-space: nowrap;
+  }
+
+  .season {
+    width: inherit;
+  }
+  .season .year {
+    display: inline-block;
+    margin: 0px;
+  }
+  .season .date {
+    display: inline-block;
+  }
+
+</style>
+
+
+</head>
+<body>
+  <video id="bg_video" class="waiting" playsinline autoplay muted loop>
+    <source src="assets/videos/bg_video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div id="date" class="waiting">
+
+  </div>
+  <div id="scoreboard" class="waiting">
+    <div class="first halftext">上半場 賽制#C</div>
+    <div class="first score">上半場</div>
+    <div class="second halftext">下半場 賽制#C</div>
+    <div class="second score">下半場</div>
+  </div>
+  <div id="ingame_overlay" class="ingame">
+      <div>
+        <div class="scoreboard">
+          <div class="first"><span class="lightblue">上半場</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPTS [3] <span class="lightblue">vs</span> &nbsp;&nbsp;&nbsp;TDT [0]&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #C</div>
+          <div class="second"><span class="lightblue">下半場</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPTS [3] <span class="lightblue">vs</span> &nbsp;&nbsp;&nbsp;TDT [0]&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #C</div>
+        </div>
+        <div class="season">
+          <div>
+            <div class="year"></div>
+          </div>
+          <div>
+            <div class="date"></div>
+          </div>
+        </div>
+      </div>
+    <div>
+      <img src="assets/images/ingame_overlay_link.png" id="overlay_link_image" />
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="assets/javascripts/obs.js"></script>
+</body>
+
+</html>
