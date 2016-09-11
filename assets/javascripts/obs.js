@@ -114,9 +114,9 @@ $.fn.textWidth = function(text, font) {
       scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + rule);
 
       scoreBoard.children('.' + halfkey + '.score').html(
-         '<span class="lightblue">[' + half.clan1.score + ']</span> ' + pad(half.clan1.name, 6, ' ') +
-        '<span class="lightblue"> vs </span>' +
-        pad(half.clan2.name, 6, ' ') + ' <span class="lightblue">[' + half.clan2.score + ']</span>');
+         pad(half.clan1.name, 6, ' ') +
+        '<span class="lightblue"> ' + half.clan1.score + '：' + half.clan2.score + '</span> ' +
+        pad(half.clan2.name, 6, ' ', true));
 
       ingameOverlay.find('.' + halfkey).html(
         '<span class="lightblue">' + halftext + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
@@ -143,10 +143,12 @@ $.fn.textWidth = function(text, font) {
 
   $('#date').text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
 
-  function pad(n, width, z) {
+  function pad(n, width, z, reverse) {
     z = z || '0';
     if (z === ' ') z = '&nbsp';
     n = n + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    if (n.length >= width) return n;
+    var p = new Array(width - n.length + 1).join(z);
+    return reverse ? n + p : p + n;
   }
 })();
