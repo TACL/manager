@@ -27,10 +27,9 @@ $.fn.textWidth = function(text, font) {
   var waiting = $('.waiting');
   var first = $('.first');
   var second = $('.second');
-
   var fireStates = database.ref('states');
 
-  bgAudio.prop('volume', 0.6);
+  bgAudio.prop('volume', 0);
 
   fireStates.on('value', function(result) {
     var states = result.val();
@@ -38,9 +37,7 @@ $.fn.textWidth = function(text, font) {
       case 'waiting':
         bgVideo[0].play();
         bgAudio[0].play();
-        bgAudio.animate({volume: 0.6}, {
-          duration: 5000
-        });
+        bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
         waiting.fadeIn();
         ingame.fadeOut();
         break;
@@ -49,11 +46,8 @@ $.fn.textWidth = function(text, font) {
           bgVideo[0].pause();
         });
 
-        bgAudio.animate({volume: 0}, {
-          duration: 5000,
-          complete: function() {
-            bgAudio[0].pause();
-          }
+        bgAudio.stop(true, false).animate({volume: 0}, 5000, function() {
+          bgAudio[0].pause();
         });
 
         ingame.fadeIn();
@@ -74,6 +68,9 @@ $.fn.textWidth = function(text, font) {
       default:
         waiting.fadeOut();
         ingame.fadeOut();
+        bgAudio.stop(true, false).animate({volume: 0}, 5000, function() {
+          bgAudio[0].pause();
+        });
         break;
     }
 
