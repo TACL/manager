@@ -7,6 +7,9 @@
   <title>TACL 分數版面設定</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://use.fontawesome.com/5b0fc6decd.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -50,7 +53,32 @@
 </head>
 <body>
   <div id="loading">
-    <h1>連線中</h1>
+    <h1>連線中...</h1>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="loginModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">請輸入密碼</h4>
+          </div>
+          <div class="modal-body">
+            <input type="password" id="password" class="form-control">
+            <div class="login alert alert-warning" style="display: none">
+              <span id="login_error_msg"></span>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <i id="login_spinner" class="fa fa-refresh fa-spin" style="display: none"></i> &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary" id="btn_login">確定</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -114,7 +142,6 @@
               <option value="A">#A</option>
               <option value="B">#B</option>
               <option value="C">#C</option>
-              <option value="D">#D</option>
             </select>
           </div>
           <label class="col-sm-1 control-label">分數</label>
@@ -139,7 +166,6 @@
               <option value="A">#A</option>
               <option value="B">#B</option>
               <option value="C">#C</option>
-              <option value="D">#D</option>
             </select>
           </div>
           <label class="col-sm-1 control-label">分數</label>
@@ -172,7 +198,6 @@
               <option value="A">#A</option>
               <option value="B">#B</option>
               <option value="C">#C</option>
-              <option value="D">#D</option>
             </select>
           </div>
           <label class="col-sm-1 control-label">分數</label>
@@ -197,7 +222,6 @@
               <option value="A">#A</option>
               <option value="B">#B</option>
               <option value="C">#C</option>
-              <option value="D">#D</option>
             </select>
           </div>
           <label class="col-sm-1 control-label">分數</label>

@@ -6,6 +6,8 @@ var config = {
   storageBucket: "tacl-79682.appspot.com",
 };
 firebase.initializeApp(config);
+firebase.auth().signOut();
+
 var database = firebase.database();
 
 var connectedRef = database.ref(".info/connected");
@@ -14,6 +16,30 @@ connectedRef.on("value", function(snap) {
     $('#loading').stop(true, false).fadeOut();
   } else {
     $('#loading').stop(true, false).fadeIn();
+  }
+});
+
+$('#btn_login').bind('click', function(event) {
+  event.preventDefault();
+  var login_spinner = $('#login_spinner').show();
+
+  firebase.auth().signInWithEmailAndPassword('spycraft@tacl.com', $('#password').val())
+  .then(function() {
+    login_spinner.hide();
+  })
+  .catch(function(error) {
+    // Handle Errors here.
+    $('.login.alert').fadeIn();
+    $('#login_error_msg').html(error.message);
+    login_spinner.hide();
+  })
+});
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if(user) {
+    $('#loginModal').modal('hide');
+  } else {
+    $('#loginModal').modal('show');
   }
 });
 
@@ -41,8 +67,10 @@ connectedRef.on("value", function(snap) {
 
   database.ref('states').on('value', function(result) {
     var states = result.val();
-    sceneButtons.filter('[value="' + states.scene + '"]').trigger('click');
-    halfButtons.filter('[value="' + states.half + '"]').trigger('click');
+    sceneButtons.removeClass('active');
+    sceneButtons.filter('[value="' + states.scene + '"]').addClass('active');
+    halfButtons.removeClass('active');
+    halfButtons.filter('[value="' + states.half + '"]').addClass('active');
   });
 
   $.each(['first', 'second'], function(i, halfkey) {

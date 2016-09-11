@@ -114,9 +114,10 @@ $.fn.textWidth = function(text, font) {
       scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + rule);
 
       scoreBoard.children('.' + halfkey + '.score').html(
-         pad(half.clan1.name, 6, ' ') +
+        pad(half.clan1.name, 6, ' ') +
         '<span class="lightblue"> ' + half.clan1.score + '：' + half.clan2.score + '</span> ' +
-        pad(half.clan2.name, 6, ' ', true));
+        pad(half.clan2.name, 6, ' ', true)
+      );
 
       ingameOverlay.find('.' + halfkey).html(
         '<span class="lightblue">' + halftext + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
