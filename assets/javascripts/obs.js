@@ -18,7 +18,8 @@ $.fn.textWidth = function(text, font) {
 (function() {
   var now = new Date();
   var scoreBoard = $('#scoreboard');
-  var bgVideo = $('#bg_video')[0];
+  var bgVideo = $('#bg_video');
+  var bgAudio = $('#bg_audio');
   var ingameOverlay = $('#ingame_overlay');
   var ingameScoreboard = $('#ingame_scoreboard')
 
@@ -29,19 +30,32 @@ $.fn.textWidth = function(text, font) {
 
   var fireStates = database.ref('states');
 
+  bgAudio.prop('volume', 0.6);
 
   fireStates.on('value', function(result) {
     var states = result.val();
     switch (states.scene) {
       case 'waiting':
-        bgVideo.play();
+        bgVideo[0].play();
+        bgAudio[0].play();
+        bgAudio.animate({volume: 0.6}, {
+          duration: 5000
+        });
         waiting.fadeIn();
         ingame.fadeOut();
         break;
       case 'ingame':
         waiting.fadeOut(400, function() {
-          bgVideo.pause();
+          bgVideo[0].pause();
         });
+
+        bgAudio.animate({volume: 0}, {
+          duration: 5000,
+          complete: function() {
+            bgAudio[0].pause();
+          }
+        });
+
         ingame.fadeIn();
 
         var year = $('.ingame .season .year');
