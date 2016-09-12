@@ -41,7 +41,6 @@ $.fn.textWidth = function(text, font) {
     switch (result.val()) {
       case 'waiting':
         if (Date.now() - noSoundTime > 15000) {
-          bgVideo[0].play();
           bgAudio[0].pause();
           bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
           bgAudio[0].load();
@@ -53,7 +52,7 @@ $.fn.textWidth = function(text, font) {
           bgAudio[0].play();
           bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
         }
-
+        bgVideo[0].play();
         waiting.fadeIn();
         ingame.fadeOut();
         break;
