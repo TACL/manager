@@ -80,7 +80,9 @@ $.fn.textWidth = function(text, font) {
         noSoundTime = new Date().getTime();
         break;
       default:
-        waiting.fadeOut();
+        waiting.fadeOut(400, function() {
+          bgVideo[0].pause();
+        });
         ingame.fadeOut();
         bgAudio.stop(true, false).animate({volume: 0}, 5000, function() {
           bgAudio[0].pause();
