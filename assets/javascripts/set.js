@@ -44,33 +44,24 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 (function() {
-  var btnIngame = $('#btn_scene_ingame');
-  var btnWaiting = $('#btn_scene_waiting');
-  var btnHide = $('#btn_scene_hide');
-  var sceneButtons = $('.btn-scene');
-  var halfButtons = $('.btn-half');
-  var updateButtons = $('.btn-update');
-
-  sceneButtons.bind('click', function(event) {
+  $('.btn-scene').bind('click', function(event) {
     event.preventDefault();
-    sceneButtons.removeClass('active');
-    var btn = $(this).addClass('active');
+    var btn = $(this);
+    btn.addClass('active').siblings().removeClass('active');
     database.ref('states/scene').set(btn.val());
   });
 
-  halfButtons.bind('click', function(event) {
+  $('.btn-half').bind('click', function(event) {
     event.preventDefault();
-    halfButtons.removeClass('active');
-    var btn = $(this).addClass('active');
+    var btn = $(this);
+    btn.addClass('active').siblings().removeClass('active');
     database.ref('states/half').set(btn.val());
   })
 
   database.ref('states').on('value', function(result) {
     var states = result.val();
-    sceneButtons.removeClass('active');
-    sceneButtons.filter('[value="' + states.scene + '"]').addClass('active');
-    halfButtons.removeClass('active');
-    halfButtons.filter('[value="' + states.half + '"]').addClass('active');
+    $('.btn-scene').filter('[value="' + states.scene + '"]').addClass('active').siblings().removeClass('siblings');
+    $('.btn-half').filter('[value="' + states.half + '"]').addClass('active').siblings().removeClass('siblings');
   });
 
   $.each(['first', 'second'], function(i, halfkey) {
@@ -85,7 +76,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       $(halfClass + '.score2').val(half.clan2.score);
     });
   });
-  updateButtons.bind('click', function(event) {
+  $('.btn-update').bind('click', function(event) {
     event.preventDefault();
     var btn = $(this);
     var half = btn.val();
