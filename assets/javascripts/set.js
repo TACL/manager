@@ -6,7 +6,6 @@ var config = {
   storageBucket: "tacl-79682.appspot.com",
 };
 firebase.initializeApp(config);
-firebase.auth().signOut();
 
 var database = firebase.database();
 
