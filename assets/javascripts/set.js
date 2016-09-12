@@ -59,8 +59,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
   database.ref('states').on('value', function(result) {
     var states = result.val();
-    $('.btn-scene').filter('[value="' + states.scene + '"]').addClass('active').siblings().removeClass('siblings');
-    $('.btn-half').filter('[value="' + states.half + '"]').addClass('active').siblings().removeClass('siblings');
+    $('.btn-scene').filter('[value="' + states.scene + '"]').addClass('active').siblings().removeClass('active');
+    $('.btn-half').filter('[value="' + states.half + '"]').addClass('active').siblings().removeClass('active');
   });
 
   $.each(['first', 'second'], function(i, halfkey) {
