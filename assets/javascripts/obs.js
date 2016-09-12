@@ -33,17 +33,23 @@ $.fn.textWidth = function(text, font) {
   var musicArr = ['eclipse.mp3', 'nova.mp3', 'spectre.mp3']
 
   var waitingCounter = 0;
+  var noSoundTime = 0;
 
   bgAudio.prop('volume', 0);
 
   fireStates.child('scene').on('value', function(result) {
     switch (result.val()) {
       case 'waiting':
-        bgVideo[0].play();
-        bgAudio[0].pause();
-        bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
-        bgAudio[0].load();
-        bgAudio[0].oncanplaythrough = function() {
+        if (Date.now() - noSoundTime > 15000) {
+          bgVideo[0].play();
+          bgAudio[0].pause();
+          bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
+          bgAudio[0].load();
+          bgAudio[0].oncanplaythrough = function() {
+            bgAudio[0].play();
+            bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
+          }
+        } else {
           bgAudio[0].play();
           bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
         }
@@ -72,7 +78,7 @@ $.fn.textWidth = function(text, font) {
         year.css('transform-origin', '100% 50%')
         date.css('transform', 'scaleX(' + 180 / date.textWidth() + ') translateY(-5px)');
         date.css('transform-origin', (date.textWidth() > 180 ? '0' : '100') + '% 50%')
-
+        noSoundTime = new Date().getTime();
         break;
       default:
         waiting.fadeOut();
@@ -80,6 +86,7 @@ $.fn.textWidth = function(text, font) {
         bgAudio.stop(true, false).animate({volume: 0}, 5000, function() {
           bgAudio[0].pause();
         });
+        noSoundTime = new Date().getTime();
         break;
     }
   });
