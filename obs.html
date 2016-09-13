@@ -37,16 +37,21 @@
     text-align: center;
     text-shadow: 4px 4px 6px #000;
     margin: auto;
-    margin-top: 550px;
+    margin-top: 450px;
     color: white;
     width: 100%;
   }
 
   .semitrans {
-    opacity: .3;
+    opacity: .35;
   }
+
+  .blending {
+    opacity: .8
+  }
+
   .halftext {
-    font-size: 35px;
+    font-size: 50px;
     padding-bottom: 20px;
   }
   .lightblue {
@@ -57,7 +62,7 @@
   }
 
   #scoreboard .score {
-    font-size: 60px;
+    font-size: 80px;
     padding-bottom: 75px;
   }
 
@@ -84,7 +89,6 @@
     padding-left: 200px;
     line-height: 32px;
     width: inherit;
-    opacity: .9;
   }
 
   .ingame .season {
@@ -116,7 +120,7 @@
 </head>
 <body>
   <video id="bg_video" class="waiting" playsinline autoplay muted loop>
-    <source src="assets/videos/bg_video.mp4" type="video/mp4">
+    <source src="assets/videos/bg_video_0913.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
   <audio id="bg_audio" loop>
@@ -126,7 +130,7 @@
   <div id="date" class="waiting">
 
   </div>
-  <div id="scoreboard" class="waiting">
+  <div id="scoreboard" class="waiting blending">
     <div class="first halftext">上半場 賽制#C</div>
     <div class="first score">上半場</div>
     <div class="second halftext">下半場 賽制#C</div>
@@ -134,7 +138,7 @@
   </div>
   <div id="ingame_overlay" class="ingame">
       <div>
-        <div class="scoreboard">
+        <div class="scoreboard blending">
           <div class="first"><span class="lightblue">上半場</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPTS [3] <span class="lightblue">vs</span> &nbsp;&nbsp;&nbsp;TDT [0]&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #C</div>
           <div class="second"><span class="lightblue">下半場</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPTS [3] <span class="lightblue">vs</span> &nbsp;&nbsp;&nbsp;TDT [0]&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #C</div>
         </div>
