@@ -9,40 +9,40 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var connectedRef = database.ref(".info/connected");
-connectedRef.on("value", function(snap) {
-  if (snap.val() === true) {
-    $('#loading').stop(true, false).fadeOut();
-  } else {
-    $('#loading').stop(true, false).fadeIn();
-  }
-});
+$(function() {
+  var connectedRef = database.ref(".info/connected");
+  connectedRef.on("value", function(snap) {
+    if (snap.val() === true) {
+      $('#loading').stop(true, false).fadeOut();
+    } else {
+      $('#loading').stop(true, false).fadeIn();
+    }
+  });
 
-$('#btn_login').bind('click', function(event) {
-  event.preventDefault();
-  var login_spinner = $('#login_spinner').show();
+  $('#btn_login').bind('click', function(event) {
+    event.preventDefault();
+    var login_spinner = $('#login_spinner').show();
 
-  firebase.auth().signInWithEmailAndPassword('spycraft@tacl.com', $('#password').val())
-  .then(function() {
-    login_spinner.hide();
-  })
-  .catch(function(error) {
-    // Handle Errors here.
-    $('.login.alert').fadeIn();
-    $('#login_error_msg').html(error.message);
-    login_spinner.hide();
-  })
-});
+    firebase.auth().signInWithEmailAndPassword('spycraft@tacl.com', $('#password').val())
+    .then(function() {
+      login_spinner.hide();
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      $('.login.alert').fadeIn();
+      $('#login_error_msg').html(error.message);
+      login_spinner.hide();
+    })
+  });
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if(user) {
-    $('#loginModal').modal('hide');
-  } else {
-    $('#loginModal').modal('show');
-  }
-});
+  firebase.auth().onAuthStateChanged(function(user) {
+    if(user) {
+      $('#loginModal').modal('hide');
+    } else {
+      $('#loginModal').modal('show');
+    }
+  });
 
-(function() {
   $('.btn-scene').bind('click', function(event) {
     event.preventDefault();
     var btn = $(this);
@@ -101,7 +101,5 @@ firebase.auth().onAuthStateChanged(function(user) {
         score: score2
       }
     });
-
   });
-
-})();
+});

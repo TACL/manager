@@ -15,7 +15,7 @@ $.fn.textWidth = function(text, font) {
     return $.fn.textWidth.fakeEl.width();
 };
 
-(function() {
+$(function() {
   var now = new Date();
   var scoreBoard = $('#scoreboard');
   var bgVideo = $('#bg_video');
@@ -160,4 +160,4 @@ $.fn.textWidth = function(text, font) {
     var p = new Array(width - n.length + 1).join(z);
     return reverse ? n + p : p + n;
   }
-})();
+});
