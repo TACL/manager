@@ -81,9 +81,7 @@ $(function() {
     }
   }
   var defaultCardStyle = {
-    display: 'none',
-    borderSpacing: 1,
-    transform: 'scale(1)'
+    display: 'none'
   };
   fireStates.child('scene').on('value', function(result) {
     switch (result.val()) {
@@ -95,15 +93,15 @@ $(function() {
             playNextSong();
           } else {
             bgAudio[0].play();
-            bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
+            bgAudio.velocity('stop', true).animate({volume: 0.35}, 3000);
           }
         }
         bgVideo[0].play();
-        waiting.fadeIn();
+        waiting.velocity('fadeIn');
         ingame.fadeOut();
         break;
       case 'ingame':
-        waiting.fadeOut(400, function() {
+        waiting.velocity('fadeOut', 400, function() {
           bgVideo[0].pause();
         });
 
@@ -111,7 +109,7 @@ $(function() {
           bgAudio[0].pause();
         });
 
-        ingame.fadeIn();
+        ingame.velocity('fadeIn');
 
         var year = $('.ingame .season .year');
         var date = $('.ingame .season .date');
@@ -126,10 +124,10 @@ $(function() {
         noSoundTime = new Date().getTime();
         break;
       default:
-        waiting.fadeOut(400, function() {
+        waiting.velocity('fadeOut', 400, function() {
           bgVideo[0].pause();
         });
-        ingame.fadeOut();
+        ingame.velocity('fadeOut');
         bgAudio.stop(true, false).animate({volume: 0}, 5000, function() {
           bgAudio[0].pause();
         });
@@ -245,9 +243,9 @@ $(function() {
 
   setInterval(function() {
     $('#ingame_overlay > div:first')
-      .fadeOut(1000)
+      .velocity('fadeOut', 1500)
       .next()
-      .fadeIn(1000)
+      .velocity('fadeIn', 1500)
       .end()
       .appendTo('#ingame_overlay');
   }, 15000);
@@ -267,15 +265,10 @@ $(function() {
       var stack = $('#waiting_overlay > div').not('.removed')
       if (stack.length === 1) return;
       stack.first()
-        .css('border-spacing', 1)
-        .css('transform', 'scale(1)')
-        .fadeOut(1500)
-        .animate({
-          borderSpacing: 0.5
+        .velocity('fadeOut', 1500)
+        .velocity({
+          scale: [0.5, 1]
         }, {
-          step: function(now, fx) {
-            $(this).css('transform', 'scale(' + now + ')')
-          },
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
           },
@@ -283,21 +276,16 @@ $(function() {
           queue: false
         }, 'swing')
         .nextAll(':not(.removed):first')
-        .css('border-spacing', 2)
-        .css('transform', 'scale(2)')
-        .fadeIn(1500)
-        .animate({
-          borderSpacing: 1
+        .velocity('fadeIn', 1500)
+        .velocity({
+          scale: [1, 1.5]
         }, {
-          step: function(now, fx) {
-            $(this).css('transform', 'scale(' + now + ')')
-          },
           duration: 1500,
           queue: false
         }, 'swing')
         .end()
         .appendTo('#waiting_overlay');
-    }, 8000);
+    }, 3000);
 
   mainDate.text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
 
