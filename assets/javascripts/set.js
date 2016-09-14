@@ -79,6 +79,7 @@ $(function() {
     $('.btn-card').filter('[value="' + states.card.type + '"]').addClass('active').siblings().removeClass('active');
     $('#custom_msg').prop('disabled', states.card.type === 'custom');
     $('#countdown_time').prop('disabled', states.card.type === 'custom');
+    $('#countdown_time').val(states.card.time);
     if (states.card.message) {
       $('#custom_msg').val(states.card.message);
     }
