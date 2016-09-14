@@ -93,7 +93,7 @@ $(function() {
             playNextSong();
           } else {
             bgAudio[0].play();
-            bgAudio.velocity('stop', true).animate({volume: 0.35}, 3000);
+            bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
           }
         }
         bgVideo[0].play();
