@@ -57,7 +57,7 @@ $(function() {
             final += val;
         }
 
-        var energy = final / careFreq / 256 / 1.2;
+        var energy = final / careFreq / 256;
 
         scale = 1;
         power = Math.exp(energy)
@@ -173,7 +173,7 @@ $(function() {
         if(card.message === '') card.message = '無訊息'
 
         if (card.message.indexOf('@cd') !== -1) {
-          card.message = card.message.replace('@cd', '<span class="countdown"></span>');
+          card.message = card.message.replace('@cd', '<span class="countdown audioscale lightblue"></span>');
           destDate = new Date();
           var arr = card.time.split(':');
           destDate.setHours(arr[0], arr[1], 0, 0);
@@ -181,7 +181,7 @@ $(function() {
         } else {
           countdown = false;
         }
-        var newCard = $('<div class="info infotext"/>').css(defaultCardStyle)
+        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">' + card.message + '</div>')
         newCard.appendTo($('#waiting_overlay'));
         updateCountdown();
