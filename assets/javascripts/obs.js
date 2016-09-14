@@ -285,7 +285,7 @@ $(function() {
         }, 'swing')
         .end()
         .appendTo('#waiting_overlay');
-    }, 3000);
+    }, 8000);
 
   mainDate.text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
 
