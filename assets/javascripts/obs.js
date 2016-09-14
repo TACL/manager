@@ -173,7 +173,7 @@ $(function() {
         if(card.message === '') card.message = '無訊息'
 
         if (card.message.indexOf('@cd') !== -1) {
-          card.message = card.message.replace('@cd', '<span class="countdown audioscale lightblue"></span>');
+          card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue"></span>&nbsp;&nbsp;&nbsp;');
           destDate = new Date();
           var arr = card.time.split(':');
           destDate.setHours(arr[0], arr[1], 0, 0);
@@ -257,7 +257,7 @@ $(function() {
 
   function updateCountdown() {
     if (countdown) {
-      $('.countdown').text(toHHMMSS(destDate.getTime() - Date.now()));
+      $('.countdown').html(toHHMMSS(destDate.getTime() - Date.now()));
     }
   }
 
