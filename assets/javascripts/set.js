@@ -54,13 +54,8 @@ $(function() {
     event.preventDefault();
     var btn = $(this);
     btn.addClass('active').siblings().removeClass('active');
-    if (btn.val() === 'custom') {
-      $('#custom_msg').prop('disabled', true);
-      $('#countdown_time').prop('disabled', true);
-    } else {
-      $('#custom_msg').prop('disabled', false);
-      $('#countdown_time').prop('disabled', false);
-    }
+    $('#custom_msg').prop('disabled', btn.val() === 'custom');
+    $('#countdown_time').prop('disabled', btn.val() === 'custom');
     database.ref('states/card').set(
       {
         type: btn.val(),
@@ -82,6 +77,11 @@ $(function() {
     $('.btn-scene').filter('[value="' + states.scene + '"]').addClass('active').siblings().removeClass('active');
     $('.btn-half').filter('[value="' + states.half + '"]').addClass('active').siblings().removeClass('active');
     $('.btn-card').filter('[value="' + states.card.type + '"]').addClass('active').siblings().removeClass('active');
+    $('#custom_msg').prop('disabled', states.card.type === 'custom');
+    $('#countdown_time').prop('disabled', states.card.type === 'custom');
+    if (states.card.message) {
+      $('#custom_msg').val(states.card.message);
+    }
   });
 
   $.each(['first', 'second'], function(i, halfkey) {
