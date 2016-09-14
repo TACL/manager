@@ -169,6 +169,7 @@ $(function() {
           .html('<div class="bottom-spacing">感謝您的收看 每週六日晚上八點</div>' +
             '<div class="bottom-spacing">敬請鎖定 TACL Twitch 頻道直播</div>');
         newCard.appendTo($('#waiting_overlay'));
+        break;
       case 'custom':
         if(card.message === '') card.message = '無訊息'
 
