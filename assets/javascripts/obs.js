@@ -166,18 +166,21 @@ $(function() {
         break;
       case 'custom':
         if(card.message === '') card.message = '無訊息'
-
+        countdown = false;
         if (card.message.indexOf('@cd') !== -1) {
           destDate = new Date();
           var arr = card.time.split(':');
           destDate.setHours(arr[0], arr[1], 0, 0);
-          var initCount = toHHMMSS(destDate.getTime() - Date.now());
-          card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue">' + initCount + '</span>&nbsp;&nbsp;&nbsp;');
-
-          countdown = true;
-        } else {
-          countdown = false;
+          var milliTime = destDate.getTime();
+          if (isNaN(milliTime)) {
+            card.message = card.message.replace('@cd', '<span class="lightgreen">時間格式錯誤</span>')
+          } else {
+            var initCount = toHHMMSS(milliTime - Date.now());
+            card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue">' + initCount + '</span>&nbsp;&nbsp;&nbsp;');
+            countdown = true;
+          }
         }
+
         var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">' + card.message + '</div>')
         newCard.appendTo($('#waiting_overlay'));
