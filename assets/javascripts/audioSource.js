@@ -6,7 +6,7 @@ var AudioSource = function(audioElement) {
     var node = audioCtx.createScriptProcessor(2048, 1, 1);
     audioCtx.crossOrigin = 'anonymous';
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256; // see - there is that 'fft' thing.
+    analyser.fftSize = 256 * 2; // see - there is that 'fft' thing.
     analyser.smoothingTimeConstant = 0.3;
     var source = audioCtx.createMediaElementSource(player); // this is where we hook up the <audio> element
     node.connect(audioCtx.destination);
@@ -18,17 +18,12 @@ var AudioSource = function(audioElement) {
         // and updates the streamData and volume properties. This the AudioSource function can be passed to a visualization routine and
         // continue to give real-time data on the audio stream.
         analyser.getByteFrequencyData(self.streamData);
-        // calculate an overall volume value
-        var total = 0;
-        for (var i = 0; i < 80; i++) { // get the volume from the first 80 bins, else it gets too loud with treble
-            total += self.streamData[i];
+
+        if (!player.paused && typeof self.onUpdate === 'function') {
+          self.onUpdate(self.streamData);
         }
-        self.volume = total;
     };
-    //setInterval(sampleAudioStream, 20); //
-    // public properties and methods
-    this.volume = 0;
-    this.streamData = new Uint8Array(128); // This just means we will have 128 "bins" (always half the analyzer.fftsize value), each containing a number between 0 and 255.
+    this.streamData = new Uint8Array(256); // This just means we will have 256 "bins" (always half the analyzer.fftsize value), each containing a number between 0 and 255.
     this.playStream = function(streamUrl) {
         // get the input stream from the audio element
         player.setAttribute('src', streamUrl);

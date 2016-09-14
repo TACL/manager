@@ -48,32 +48,28 @@ $(function() {
   var canvasElement = document.getElementById('canvas');
 
   var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
-  var draw = function() {
-      if (!bgAudio[0].paused) {
-        var final = 0;
-        var careFreq = Math.floor(audioSource.streamData.length / 10);
-        for(bin = 0; bin < careFreq; bin ++) {
-            var val = audioSource.streamData[bin];
-            final += val;
-        }
+  audioSource.onUpdate = function(data) {
+    var final = 0;
+    var careFreq = 80;
+    for(var bin = 0; bin < careFreq; bin++) {
+        var val = data[bin];
+        final += val;
+    }
 
-        var energy = final / careFreq / 256;
+    var energy = final / careFreq / 256;
 
-        scale = 1;
-        power = Math.exp(energy)
-        scale = scale * power;
-        decayScale = Math.max(decayScale, scale);
+    scale = 1;
+    power = Math.exp(energy);
+    scale = scale * power;
+    decayScale = Math.max(decayScale, scale);
 
-        smoothedScale += (decayScale - smoothedScale) * 0.3;
+    smoothedScale += (decayScale - smoothedScale) * 0.3;
 
-        decayScale = decayScale * 0.985;
+    decayScale = decayScale * 0.985;
 
-        $('.audioscale').css('transform', 'scale(' + smoothedScale + ')');
-      }
-      requestAnimationFrame(draw);
-  };
+    $('.audioscale').filter(':visible').css('transform', 'scale(' + smoothedScale + ')');
+  }
 
-  draw();
   function playNextSong() {
     bgAudio[0].pause();
     bgAudio[0].src='https://fonger.github.io/TACL/assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
@@ -85,7 +81,7 @@ $(function() {
     }
   }
   var defaultCardStyle = {
-    opacity: 0,
+    display: 'none',
     borderSpacing: 1,
     transform: 'scale(1)'
   };
@@ -273,9 +269,7 @@ $(function() {
       stack.first()
         .css('border-spacing', 1)
         .css('transform', 'scale(1)')
-        .animate({
-          opacity: 0,
-        }, 1500)
+        .fadeOut(1500)
         .animate({
           borderSpacing: 0.5
         }, {
@@ -291,11 +285,7 @@ $(function() {
         .nextAll(':not(.removed):first')
         .css('border-spacing', 2)
         .css('transform', 'scale(2)')
-        .animate({
-          opacity: 1,
-          left: 0,
-          top: 0
-        }, 1500)
+        .fadeIn(1500)
         .animate({
           borderSpacing: 1
         }, {
