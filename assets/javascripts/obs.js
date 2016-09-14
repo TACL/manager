@@ -208,7 +208,7 @@ $(function() {
 
       scoreBoard.children('.' + halfkey + '.score').html(
         pad(half.clan1.name, 6, ' ') +
-        '&nbsp;&nbsp;<span class="lightblue audioscale">' + half.clan1.score + '</span>&nbsp;：&nbsp;<span class="lightblue audioscale">' + half.clan2.score + '</span>&nbsp;&nbsp;' +
+        '&nbsp;&nbsp;<span class="audioscale"><span class="lightblue">' + half.clan1.score + '</span>：<span class="lightblue">' + half.clan2.score + '</span></span>&nbsp;&nbsp;' +
         pad(half.clan2.name, 6, ' ', true)
       );
 
@@ -274,7 +274,7 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [0.8, 1],
+          scale: [0.7, 1],
           blur: [10, 0]
         }, {
           complete: function() {
@@ -286,7 +286,7 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 1.2],
+          scale: [1, 1.4],
           blur: [0, 10]
         }, {
           duration: 1500,
