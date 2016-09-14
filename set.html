@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TACL 直播後台 1.0.1</title>
+  <title>TACL 直播後台 1.1.0</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="https://use.fontawesome.com/5b0fc6decd.js"></script>
@@ -86,7 +86,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">TACL 直播畫面後台 1.0.1</a>
+        <a class="navbar-brand" href="#">TACL 直播畫面後台 1.1.0</a>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
@@ -99,7 +99,7 @@
   <div class="container">
 
     <form class="form-horizontal">
-      <h3>基本設定</h3>
+      <h3>畫面切換</h3>
 
       <div class="form-group">
         <label class="col-sm-1 control-label">場景</label>
@@ -119,6 +119,29 @@
           </div>
         </div>
       </div>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-1 control-label">輪播</label>
+          <div class="col-sm-8">
+            <div class="input-group">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default btn-card" value="none">無</button>
+                <button type="button" class="btn btn-default btn-card" value="thanks">感謝收看</button>
+                <button type="button" class="btn btn-default btn-card" value="custom">自訂文字</button>
+              </span>
+              <input class="form-control" id="custom_msg">
+            </div>
+            <p style="text-align: right">
+              輸入 <b>@cd</b> 顯示倒數
+            </p>
+          </div>
+          <div class="col-sm-3">
+            <input type="time" class="form-control" id="countdown_time">
+            <p style="text-align: right">
+              設定開始時間
+            </p>
+          </div>
+        </div>
       <hr>
       <h3>上半場</h3>
       <div>
@@ -143,7 +166,11 @@
           </div>
           <label class="col-sm-1 control-label">分數</label>
           <div class="col-sm-3">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control first score1" value="0" min="0" max="3" step="1">
+            <select class="form-control first score1">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -167,7 +194,11 @@
           </div>
           <label class="col-sm-1 control-label">分數</label>
           <div class="col-sm-3">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control first score2" value="0" min="0" max="3" step="1">
+            <select class="form-control first score2">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -199,7 +230,11 @@
           </div>
           <label class="col-sm-1 control-label">分數</label>
           <div class="col-sm-3">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control second score1" value="0" min="0" max="3" step="1">
+            <select class="form-control second score1">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
@@ -223,12 +258,39 @@
           </div>
           <label class="col-sm-1 control-label">分數</label>
           <div class="col-sm-3">
-            <input type="number" pattern="[0-9]*" inputmode="numeric" class="form-control second score2" value="0" min="0" max="3" step="1">
+            <select class="form-control second score2">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
           <div class="col-sm-offset-1 col-sm-11">
             <button class="btn btn-primary btn-update" value="second">更新</button>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <h3>工作人員</h3>
+      <div>
+        <div class="form-group">
+          <label class="col-sm-1 control-label">裁判</label>
+          <div class="col-sm-3">
+            <input class="form-control" id="refuree">
+          </div>
+          <label class="col-sm-1 control-label">賽評</label>
+          <div class="col-sm-3">
+            <input class="form-control" id="caster">
+          </div>
+          <label class="col-sm-1 control-label">轉播</label>
+          <div class="col-sm-3">
+            <input class="form-control" id="broadcaster">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-11">
+            <button class="btn btn-primary" id="btn_update_info">更新</button>
           </div>
         </div>
       </div>

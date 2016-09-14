@@ -15,9 +15,16 @@ $.fn.textWidth = function(text, font) {
     return $.fn.textWidth.fakeEl.width();
 };
 
+$.fn.prevOrLast = function(selector)
+{
+  var prev = this.prev(selector);
+  return (prev.length) ? prev : this.nextAll(selector).last();
+};
+
 $(function() {
   var now = new Date();
   var scoreBoard = $('#scoreboard');
+  var mainDate = $('#date');
   var bgVideo = $('#bg_video');
   var bgAudio = $('#bg_audio');
   var ingameOverlay = $('#ingame_overlay');
@@ -37,20 +44,63 @@ $(function() {
 
   bgAudio.prop('volume', 0);
 
+  var audioSource = new AudioSource('bg_audio');
+  var canvasElement = document.getElementById('canvas');
+
+  var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
+  var draw = function() {
+      if (!bgAudio[0].paused) {
+        var final = 0;
+        var careFreq = Math.floor(audioSource.streamData.length / 10);
+        for(bin = 0; bin < careFreq; bin ++) {
+            var val = audioSource.streamData[bin];
+            final += val;
+        }
+
+        var energy = final / careFreq / 256 / 1.2;
+
+        scale = 1;
+        power = Math.exp(energy)
+        scale = scale * power;
+        decayScale = Math.max(decayScale, scale);
+
+        smoothedScale += (decayScale - smoothedScale) * 0.3;
+
+        decayScale = decayScale * 0.985;
+
+        $('.audioscale').css('transform', 'scale(' + smoothedScale + ')');
+      }
+      requestAnimationFrame(draw);
+  };
+
+  draw();
+  function playNextSong() {
+    bgAudio[0].pause();
+    bgAudio[0].src='https://fonger.github.io/TACL/assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
+    bgAudio[0].crossOrigin = 'anonymous';
+    bgAudio[0].load();
+    bgAudio[0].oncanplaythrough = function() {
+      bgAudio[0].play();
+      bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
+    }
+  }
+  var defaultCardStyle = {
+    opacity: 0,
+    borderSpacing: 1,
+    transform: 'scale(1)'
+  };
   fireStates.child('scene').on('value', function(result) {
     switch (result.val()) {
       case 'waiting':
         if (Date.now() - noSoundTime > 15000) {
-          bgAudio[0].pause();
-          bgAudio[0].src='assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
-          bgAudio[0].load();
-          bgAudio[0].oncanplaythrough = function() {
-            bgAudio[0].play();
-            bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
-          }
+          playNextSong();
         } else {
-          bgAudio[0].play();
-          bgAudio.stop(true, false).animate({volume: 0.5}, 3000);
+          if (!bgAudio[0].src || bgAudio[0].src === '') {
+            playNextSong();
+          } else {
+            bgAudio[0].play();
+            bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
+          }
         }
         bgVideo[0].play();
         waiting.fadeIn();
@@ -106,7 +156,42 @@ $(function() {
         second.removeClass('semitrans');
         break;
     }
+  });
+  var countdown = false;
+  var destDate;
+  fireStates.child('card').on('value', function(result) {
+    $('.card').not('.removed').addClass('removing');
+    var card = result.val();
+    countdown = false;
+    switch (card.type) {
+      case 'thanks':
+        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
+          .html('<div class="bottom-spacing">感謝您的收看 每週六日晚上八點</div>' +
+            '<div class="bottom-spacing">敬請鎖定 TACL Twitch 頻道直播</div>');
+        newCard.appendTo($('#waiting_overlay'));
+      case 'custom':
+        if(card.message === '') card.message = '無訊息'
+
+        if (card.message.indexOf('@cd') !== -1) {
+          card.message = card.message.replace('@cd', '<span class="countdown"></span>');
+          destDate = new Date();
+          var arr = card.time.split(':');
+          destDate.setHours(arr[0], arr[1], 0, 0);
+          countdown = true;
+        } else {
+          countdown = false;
+        }
+        var newCard = $('<div class="info infotext"/>').css(defaultCardStyle)
+          .html('<div class="bottom-spacing">' + card.message + '</div>')
+        newCard.appendTo($('#waiting_overlay'));
+        updateCountdown();
+        break;
+      default:
+        break;
+    }
+
   })
+
   var fireScore = database.ref('score');
   fireScore.on('value', function(result) {
     var score = result.val();
@@ -123,7 +208,7 @@ $(function() {
 
       scoreBoard.children('.' + halfkey + '.score').html(
         pad(half.clan1.name, 6, ' ') +
-        '<span class="lightblue"> ' + half.clan1.score + '：' + half.clan2.score + '</span> ' +
+        '&nbsp;&nbsp;<span class="lightblue audioscale">' + half.clan1.score + '</span>&nbsp;：&nbsp;<span class="lightblue audioscale">' + half.clan2.score + '</span>&nbsp;&nbsp;' +
         pad(half.clan2.name, 6, ' ', true)
       );
 
@@ -138,6 +223,19 @@ $(function() {
 
   });
 
+  var fireInfo = database.ref('info');
+  fireInfo.on('value', function(result) {
+    var info = result.val();
+    $('.info').not('.removed').addClass('removing');
+    var spaces = Math.max(8,spaceLength(info.refuree), spaceLength(info.caster), spaceLength(info.broadcaster)) + 1;
+    var newCard = $('<div class="info infotext"/>')
+      .css(defaultCardStyle)
+      .html('<div class="bottom-spacing">裁判 ' + pad(info.refuree, spaces, ' ') + '</div>' +
+        '<div class="bottom-spacing">賽評 ' + pad(info.caster, spaces, ' ') + '</div>' +
+        '<div class="bottom-spacing">轉播 ' + pad(info.broadcaster, spaces, ' ') + '</div>');
+    newCard.appendTo($('#waiting_overlay'));
+  });
+
   $("#ingame_overlay > div:gt(0)").hide();
 
   setInterval(function() {
@@ -149,15 +247,90 @@ $(function() {
       .appendTo('#ingame_overlay');
   }, 15000);
 
+  function updateCountdown() {
+    if (countdown) {
+      $('.countdown').text(toHHMMSS(destDate.getTime() - Date.now()));
+    }
+  }
 
-  $('#date').text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
+  setInterval(updateCountdown, 1000);
+
+    $("#waiting_overlay > div:gt(0)")
+    .css(defaultCardStyle);
+    var i = 0;
+    setInterval(function() {
+      var stack = $('#waiting_overlay > div').not('.removed')
+      if (stack.length === 1) return;
+      stack.first()
+        .css('border-spacing', 1)
+        .css('transform', 'scale(1)')
+        .animate({
+          opacity: 0,
+        }, 1500)
+        .animate({
+          borderSpacing: 0.5
+        }, {
+          step: function(now, fx) {
+            $(this).css('transform', 'scale(' + now + ')')
+          },
+          complete: function() {
+              $(this).filter('.removing').addClass('removed').removeClass('removing');
+          },
+          duration: 1500,
+          queue: false
+        }, 'swing')
+        .nextAll(':not(.removed):first')
+        .css('border-spacing', 2)
+        .css('transform', 'scale(2)')
+        .animate({
+          opacity: 1,
+          left: 0,
+          top: 0
+        }, 1500)
+        .animate({
+          borderSpacing: 1
+        }, {
+          step: function(now, fx) {
+            $(this).css('transform', 'scale(' + now + ')')
+          },
+          duration: 1500,
+          queue: false
+        }, 'swing')
+        .end()
+        .appendTo('#waiting_overlay');
+    }, 8000);
+
+  mainDate.text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
 
   function pad(n, width, z, reverse) {
     z = z || '0';
     if (z === ' ') z = '&nbsp';
     n = n + '';
-    if (n.length >= width) return n;
-    var p = new Array(width - n.length + 1).join(z);
+    var length = spaceLength(n);
+    if (length >= width) return n;
+    var p = new Array(width - length + 1).join(z);
     return reverse ? n + p : p + n;
+  }
+
+  function spaceLength(str) {
+    // returns the byte length of an utf8 string
+    var s = str.length;
+    for (var i=str.length-1; i>=0; i--) {
+      var code = str.charCodeAt(i);
+      if (code > 0x7f && code <= 0x7ff) s++;
+      else if (code > 0x7ff && code <= 0xffff) s++;
+      if (code >= 0xDC00 && code <= 0xDFFF) i--; //trail surrogate
+    }
+    return s;
+  }
+
+  function toHHMMSS(milliseconds) {
+		if(milliseconds < 0) milliseconds = 0;
+    var second = Math.floor(milliseconds / 1000);
+    if (second < 3600) {
+		  return [parseInt(second / 60, 10), second % 60].join(":").replace(/\b(\d)\b/g, "0$1");
+    } else {
+      return [parseInt(second / 3600, 10), parseInt(second / 60 % 60,10), second % 60].join(":").replace(/\b(\d)\b/g, "0$1");
+    }
   }
 });

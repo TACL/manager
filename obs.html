@@ -9,6 +9,8 @@
     background: #000;
     color: #fff;
     -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+border:1px solid transparent;
   }
   video {
     position: fixed;
@@ -31,14 +33,19 @@
     width: 100%;
     opacity: .2;
   }
-  #scoreboard {
+  #waiting_overlay {
     font-family: 華康粗黑體, 微軟正黑體, Arial Narrow, sans-serif;
     font-weight: 100;
     text-align: center;
-    text-shadow: 4px 4px 6px #000;
-    margin: auto;
-    margin-top: 450px;
+    text-shadow: 0 0 2em #00ffff;
+    top: 450px;
+    width: 100%;
     color: white;
+    position: absolute;
+  }
+
+  #waiting_overlay > div {
+    position: absolute;
     width: 100%;
   }
 
@@ -51,20 +58,51 @@
   }
 
   .halftext {
-    font-size: 50px;
-    padding-bottom: 20px;
+    font-size: 55px;
+    padding-bottom: 25px;
   }
   .lightblue {
     color: #11cfff;
   }
+
+  #scoreboard .lightblue {
+    display: inline-block;
+    color: #0ff;
+  }
+
+  #scoreboard .semitrans {
+    filter: blur(2px);
+    filter: blur(2px); /* Someday, sigh ... */
+  	-webkit-filter: blur(2px); /* Prefixed CSS3 blur filters */
+  	-moz-filter: blur(2px);
+  	-o-filter: blur(2px);
+  	-ms-filter: blur(2px);
+    filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='5'); /* IE lte 9 */
+    text-shadow: none;
+  }
+
   .lightgreen {
     color: #00ff00;
   }
 
   #scoreboard .score {
-    font-size: 80px;
+    font-size: 90px;
     padding-bottom: 75px;
   }
+
+  .infotext {
+    font-size: 75px;
+  }
+
+  .bottom-spacing {
+    padding-bottom: 60px;
+  }
+
+  .ingame {
+    display: none;
+  }
+
+
 
   #ingame_overlay {
     position: absolute;
@@ -74,7 +112,6 @@
     left: 291px;
     width: 1063px;
     height: 96px;
-    display: none;
   }
 
   #ingame_overlay > div {
@@ -119,22 +156,26 @@
 
 </head>
 <body>
-  <video id="bg_video" class="waiting" playsinline autoplay muted loop>
+  <video id="bg_video" class="waiting" width="1920" height="1080" playsinline autoplay muted loop>
     <source src="assets/videos/bg_video_0913.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-  <audio id="bg_audio" loop>
+  <audio id="bg_audio" crossOrigin="anonymous" loop>
     <source src="assets/musics/eclipse.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
   <div id="date" class="waiting">
 
   </div>
-  <div id="scoreboard" class="waiting blending">
-    <div class="first halftext">上半場 賽制#C</div>
-    <div class="first score">上半場</div>
-    <div class="second halftext">下半場 賽制#C</div>
-    <div class="second score">下半場</div>
+  <div class="waiting">
+    <div id="waiting_overlay">
+      <div id="scoreboard" class="blending">
+        <div class="first halftext">上半場 賽制 #X</div>
+        <div class="first score">Loading...</div>
+        <div class="second halftext">下半場 賽制 #X</div>
+        <div class="second score">Loading...</div>
+      </div>
+    </div>
   </div>
   <div id="ingame_overlay" class="ingame">
       <div>
@@ -157,6 +198,8 @@
   </div>
   <script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
+  <script src="assets/javascripts/audioSource.js"></script>
   <script src="assets/javascripts/obs.js"></script>
 </body>
 
