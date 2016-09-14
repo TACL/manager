@@ -20,10 +20,12 @@
     height: 1080;
     z-index: -100;
   }
+
   @font-face {
-    font-family: 華康粗黑體;
+    font-family: '華康粗黑體';
     src: url(assets/fonts/DFHei-Bd-HK-BF.woff);
   }
+
   #date {
     font-family: Arial Black, sans-serif;
     position: absolute;
@@ -34,7 +36,7 @@
     opacity: .2;
   }
   #waiting_overlay {
-    font-family: 華康粗黑體, 微軟正黑體, Arial Narrow, sans-serif;
+    font-family: '華康粗黑體', 'Arial Narrow', sans-serif;
     text-align: center;
     text-shadow: 0 0 2em #00ffff;
     top: 450px;
@@ -53,7 +55,7 @@
   }
 
   .blending {
-    opacity: .8
+    opacity: .75
   }
 
   .halftext {
@@ -78,8 +80,7 @@
 
   #scoreboard .semitrans {
     filter: blur(2px);
-    filter: blur(2px); /* Someday, sigh ... */
-  	-webkit-filter: blur(2px); /* Prefixed CSS3 blur filters */
+  	-webkit-filter: blur(2px);
   	-moz-filter: blur(2px);
   	-o-filter: blur(2px);
   	-ms-filter: blur(2px);
@@ -174,8 +175,8 @@
   </audio>
   <div class="waiting">
     <div id="date"></div>
-    <div id="waiting_overlay">
-      <div id="scoreboard" class="blending">
+    <div id="waiting_overlay" class="blending">
+      <div id="scoreboard">
         <div class="first halftext">上半場 賽制 #X</div>
         <div class="first score">Loading...</div>
         <div class="second halftext">下半場 賽制 #X</div>

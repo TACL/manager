@@ -168,10 +168,12 @@ $(function() {
         if(card.message === '') card.message = '無訊息'
 
         if (card.message.indexOf('@cd') !== -1) {
-          card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue"></span>&nbsp;&nbsp;&nbsp;');
           destDate = new Date();
           var arr = card.time.split(':');
           destDate.setHours(arr[0], arr[1], 0, 0);
+          var initCount = toHHMMSS(destDate.getTime() - Date.now());
+          card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue">' + initCount + '</span>&nbsp;&nbsp;&nbsp;');
+
           countdown = true;
         } else {
           countdown = false;
@@ -269,7 +271,8 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [0.5, 1]
+          scale: [0.8, 1],
+          blur: [10, 0]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -280,7 +283,8 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 1.5]
+          scale: [1, 1.2],
+          blur: [0, 10]
         }, {
           duration: 1500,
           queue: false
