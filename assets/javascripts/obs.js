@@ -242,7 +242,9 @@ $(function() {
   $("#ingame_overlay > div:gt(0)").hide();
 
   setInterval(function() {
-    $('#ingame_overlay > div:first')
+    var banner = $('#ingame_overlay > div:first');
+    if (!banner.is(':visible')) return;
+    banner
       .velocity('fadeOut', 1500)
       .next()
       .velocity('fadeIn', 1500)
@@ -252,7 +254,7 @@ $(function() {
 
   function updateCountdown() {
     if (countdown) {
-      $('.countdown').html(toHHMMSS(destDate.getTime() - Date.now()));
+      $('.countdown').filter(':visible').html(toHHMMSS(destDate.getTime() - Date.now()));
     }
   }
 
@@ -263,7 +265,7 @@ $(function() {
     var i = 0;
     setInterval(function() {
       var stack = $('#waiting_overlay > div').not('.removed')
-      if (stack.length === 1) return;
+      if (stack.length === 1 || !stack.is(':visible')) return;
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
