@@ -236,6 +236,14 @@ $(function() {
     newCard.appendTo($('#waiting_overlay'));
   });
 
+  var firstLoaded = true;;
+  database.ref('reload').on('value', function(result) {
+    if (!firstLoaded) {
+      location.reload();
+    }
+    firstLoaded = false;
+  });
+
   $("#ingame_overlay > div:gt(0)").hide();
 
   setInterval(function() {

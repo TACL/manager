@@ -139,4 +139,8 @@ $(function() {
       broadcaster: $('#broadcaster').val()
     });
   });
+  $('#btn_force_reload').bind('click', function(event) {
+    event.preventDefault();
+    database.ref('reload').set(Math.random());
+  });
 });
