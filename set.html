@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TACL 直播後台 1.1.4</title>
+  <title>TACL 直播後台 1.1.5</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha256-ZT4HPpdCOt2lvDkXokHuhJfdOKSPFLzeAJik5U/Q+l4=" crossorigin="anonymous" />
@@ -17,7 +17,7 @@
   <![endif]-->
   <style>
     body {
-      padding-top:70px;
+      padding-top: 45px;
       font-family: 微軟正黑體, Arial Narrow, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -41,6 +41,12 @@
       left: 50%;
       margin-left: -100px;
       margin-top: -50px;
+    }
+    .title-help {
+      font-size: 12px;
+    }
+    .custom-helptext {
+      padding-top: 5px;
     }
   </style>
 </head>
@@ -82,7 +88,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">TACL 直播後台 1.1.4</a>
+        <a class="navbar-brand" href="#">TACL 直播後台 1.1.5</a>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
@@ -128,15 +134,18 @@
           <label class="col-md-1 control-label">自訂</label>
           <div class="col-md-7">
             <input class="form-control" id="custom_msg">
-            <p class="custom-warning">
-              若要編輯請先將輪播設為預設，更改完成再按自訂。
+            <p class="custom-helptext custom-inactive" style="display: none">
+              <span class="label label-warning">停用中</span> 只有輪播選自訂時才會顯示此內容
+            </p>
+            <p class="custom-helptext custom-active" style="display: none">
+              <span class="label label-success">顯示中</span> 若要編輯將輪播設預設，改好再按自訂
             </p>
           </div>
           <label class="col-md-1 control-label">時間</label>
           <div class="col-md-3">
             <input class="form-control" id="countdown_time" type="time">
-            <p class="custom-normal">
-              於自訂輸入<b>@cd</b>顯示倒數
+            <p class="custom-helptext">
+              於自訂輸入<b>@cd</b>可顯示倒數
             </p>
           </div>
         </div>
@@ -144,9 +153,19 @@
       <h3><i class="fa fa-gamepad"></i> 上半場</h3>
       <div>
         <div class="form-group">
-          <label class="col-sm-1 control-label">戰隊1</label>
-          <div class="col-sm-3">
-            <select class="form-control first clan1">
+          <label class="col-sm-2 control-label">賽制</label>
+          <div class="col-sm-10">
+            <select class="form-control first rule" data-realtime data-target="score/first/rule">
+              <option value="A">#A</option>
+              <option value="B">#B</option>
+              <option value="C">#C</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">戰隊1</label>
+          <div class="col-sm-4">
+            <select class="form-control first clan1" data-realtime data-target="score/first/clan1/name">
               <option value="Rush">Clan Rush</option>
               <option value="Milles">Milles Clan</option>
               <option value="SPTS">SPTS</option>
@@ -154,17 +173,10 @@
               <option value="TDT">TDT</option>
             </select>
           </div>
-          <label class="col-sm-1 control-label">賽制</label>
-          <div class="col-sm-3">
-            <select class="form-control first rule1">
-              <option value="A">#A</option>
-              <option value="B">#B</option>
-              <option value="C">#C</option>
-            </select>
-          </div>
-          <label class="col-sm-1 control-label">分數</label>
-          <div class="col-sm-3">
-            <select class="form-control first score1">
+
+          <label class="col-sm-2 control-label">分數</label>
+          <div class="col-sm-4">
+            <select class="form-control first score1" data-realtime data-target="score/first/clan1/score">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -173,9 +185,9 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-1 control-label">戰隊2</label>
-          <div class="col-sm-3">
-            <select class="form-control first clan2">
+          <label class="col-sm-2 control-label">戰隊2</label>
+          <div class="col-sm-4">
+            <select class="form-control first clan2" data-realtime data-target="score/first/clan2/name">
               <option value="Rush">Clan Rush</option>
               <option value="Milles">Milles Clan</option>
               <option value="SPTS">SPTS</option>
@@ -183,36 +195,33 @@
               <option value="TDT">TDT</option>
             </select>
           </div>
-          <label class="col-sm-1 control-label">賽制</label>
-          <div class="col-sm-3">
-            <select class="form-control first rule2">
-              <option value="A">#A</option>
-              <option value="B">#B</option>
-              <option value="C">#C</option>
-            </select>
-          </div>
-          <label class="col-sm-1 control-label">分數</label>
-          <div class="col-sm-3">
-            <select class="form-control first score2">
+          <label class="col-sm-2 control-label">分數</label>
+          <div class="col-sm-4">
+            <select class="form-control first score2" data-realtime data-target="score/first/clan2/score">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-offset-1 col-sm-11">
-            <button class="btn btn-primary btn-update" value="first">更新</button>
           </div>
         </div>
       </div>
       <h3><i class="fa fa-gamepad"></i> 下半場</h3>
       <div>
         <div class="form-group">
-          <label class="col-sm-1 control-label">戰隊1</label>
-          <div class="col-sm-3">
-            <select class="form-control second clan1">
+          <label class="col-sm-2 control-label">賽制</label>
+          <div class="col-sm-10">
+            <select class="form-control second rule" data-realtime data-target="score/second/rule">
+              <option value="A">#A</option>
+              <option value="B">#B</option>
+              <option value="C">#C</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">戰隊1</label>
+          <div class="col-sm-4">
+            <select class="form-control second clan1" data-realtime data-target="score/second/clan1/name">
               <option value="Rush">Clan Rush</option>
               <option value="Milles">Milles Clan</option>
               <option value="SPTS">SPTS</option>
@@ -220,17 +229,9 @@
               <option value="TDT">TDT</option>
             </select>
           </div>
-          <label class="col-sm-1 control-label">賽制</label>
-          <div class="col-sm-3">
-            <select class="form-control second rule1">
-              <option value="A">#A</option>
-              <option value="B">#B</option>
-              <option value="C">#C</option>
-            </select>
-          </div>
-          <label class="col-sm-1 control-label">分數</label>
-          <div class="col-sm-3">
-            <select class="form-control second score1">
+          <label class="col-sm-2 control-label">分數</label>
+          <div class="col-sm-4">
+            <select class="form-control second score1" data-realtime data-target="score/second/clan1/score">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -239,9 +240,9 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-1 control-label">戰隊2</label>
-          <div class="col-sm-3">
-            <select class="form-control second clan2">
+          <label class="col-sm-2 control-label">戰隊2</label>
+          <div class="col-sm-4">
+            <select class="form-control second clan2" data-realtime data-target="score/second/clan2/name">
               <option value="Rush">Clan Rush</option>
               <option value="Milles">Milles Clan</option>
               <option value="SPTS">SPTS</option>
@@ -249,49 +250,40 @@
               <option value="TDT">TDT</option>
             </select>
           </div>
-          <label class="col-sm-1 control-label">賽制</label>
-          <div class="col-sm-3">
-            <select class="form-control second rule2">
-              <option value="A">#A</option>
-              <option value="B">#B</option>
-              <option value="C">#C</option>
-            </select>
-          </div>
-          <label class="col-sm-1 control-label">分數</label>
-          <div class="col-sm-3">
-            <select class="form-control second score2">
+          <label class="col-sm-2 control-label">分數</label>
+          <div class="col-sm-4">
+            <select class="form-control second score2" data-realtime data-target="score/second/clan2/score">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-offset-1 col-sm-11">
-            <button class="btn btn-primary btn-update" value="second">更新</button>
           </div>
         </div>
       </div>
       <hr>
-      <h3><i class="fa fa-users"></i> 工作人員</h3>
+      <h3>
+        <i class="fa fa-users"></i> 工作人員
+        <small class="text-muted">改好請按更新鈕生效</small>
+      </h3>
       <div>
         <div class="form-group">
-          <label class="col-sm-1 control-label">裁判</label>
-          <div class="col-sm-3">
+          <label class="col-sm-2 control-label">裁判</label>
+          <div class="col-sm-4">
             <input class="form-control" id="refuree">
           </div>
-          <label class="col-sm-1 control-label">賽評</label>
-          <div class="col-sm-3">
+          <label class="col-sm-2 control-label">賽評</label>
+          <div class="col-sm-4">
             <input class="form-control" id="caster">
-          </div>
-          <label class="col-sm-1 control-label">轉播</label>
-          <div class="col-sm-3">
-            <input class="form-control" id="broadcaster">
           </div>
         </div>
         <div class="form-group">
-          <div class="col-sm-offset-1 col-sm-11">
+          <label class="col-sm-2 control-label">轉播</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="broadcaster">
+          </div>
+          <label class="col-sm-2 control-label"></label>
+          <div class="col-sm-4">
             <button class="btn btn-primary" id="btn_update_info">更新</button>
           </div>
         </div>

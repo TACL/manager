@@ -56,6 +56,13 @@ $(function() {
     btn.addClass('active').siblings().removeClass('active');
     $('#custom_msg').prop('disabled', btn.val() === 'custom');
     $('#countdown_time').prop('disabled', btn.val() === 'custom');
+    if(btn.val() === 'custom') {
+      $('.custom-active').show();
+      $('.custom-inactive').hide();
+    } else {
+      $('.custom-active').hide();
+      $('.custom-inactive').show();
+    }
     database.ref('states/card').set(
       {
         type: btn.val(),
@@ -79,24 +86,38 @@ $(function() {
     $('.btn-card').filter('[value="' + states.card.type + '"]').addClass('active').siblings().removeClass('active');
     $('#custom_msg').prop('disabled', states.card.type === 'custom');
     $('#countdown_time').prop('disabled', states.card.type === 'custom');
+
+    if(states.card.type === 'custom') {
+      $('.custom-active').show();
+      $('.custom-inactive').hide();
+    } else {
+      $('.custom-active').hide();
+      $('.custom-inactive').show();
+    }
+
     $('#countdown_time').val(states.card.time);
     if (states.card.message) {
       $('#custom_msg').val(states.card.message);
     }
   });
 
-  $.each(['first', 'second'], function(i, halfkey) {
-    database.ref('score').child(halfkey).on('value', function(result) {
-      var half = result.val();
-      var halfClass = '.' + halfkey;
-      $(halfClass + '.clan1').val(half.clan1.name);
-      $(halfClass + '.clan2').val(half.clan2.name);
-      $(halfClass + '.rule1').val(half.clan1.rule);
-      $(halfClass + '.rule2').val(half.clan2.rule);
-      $(halfClass + '.score1').val(half.clan1.score);
-      $(halfClass + '.score2').val(half.clan2.score);
-    });
-  });
+  $('[data-realtime]')
+  .each(function() {
+    var input = $(this);
+    var target = input.data('target');
+    if(target && target !== '') {
+      database.ref(target).on('value', function(result) {
+        input.val(result.val());
+      });
+    }
+  })
+  .change(function() {
+    var input = $(this);
+    var target = input.data('target');
+    if(target && target !== '') {
+      database.ref(target).set(input.val());
+    }
+  })
 
   database.ref('info').on('value', function(result) {
     var info = result.val();
@@ -105,33 +126,6 @@ $(function() {
     $('#broadcaster').val(info.broadcaster);
   });
 
-  $('.btn-update').bind('click', function(event) {
-    event.preventDefault();
-    var btn = $(this);
-    var half = btn.val();
-
-    var halfClass = '.' + half;
-
-    var clan1 = $(halfClass + '.clan1').val();
-    var clan2 = $(halfClass + '.clan2').val();
-    var rule1 = $(halfClass + '.rule1').val();
-    var rule2 = $(halfClass + '.rule2').val();
-    var score1 = $(halfClass + '.score1').val();
-    var score2 = $(halfClass + '.score2').val();
-
-    database.ref('score').child(half).set({
-      clan1: {
-        name: clan1,
-        rule: rule1,
-        score: score1
-      },
-      clan2: {
-        name: clan2,
-        rule: rule2,
-        score: score2
-      }
-    });
-  });
   $('#btn_update_info').bind('click', function(event) {
     event.preventDefault();
     database.ref('info').set({
