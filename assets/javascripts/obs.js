@@ -200,11 +200,9 @@ $(function() {
 
     $.each(['first', 'second'], function(i, halfkey) {
       var half = score[halfkey];
-      var rule = half.clan1.rule === half.clan2.rule ?
-        half.clan1.rule : half.clan1.rule + half.clan2.rule;
       var halftext = (i === 0 ? '上' : '下') + '半場';
 
-      scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + rule);
+      scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + half.rule);
 
       scoreBoard.children('.' + halfkey + '.score').html(
         pad(half.clan1.name, 6, ' ') +
@@ -217,7 +215,7 @@ $(function() {
         pad(half.clan1.name, 6, ' ') + ' [' + half.clan1.score + ']' +
         '<span class="lightblue"> vs </span>' +
         pad(half.clan2.name, 6, ' ') + ' [' + half.clan2.score + ']' +
-        '&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #' + rule
+        '&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #' + half.rule
       )
     });
 
