@@ -164,24 +164,25 @@ $(function() {
         newCard.appendTo($('#waiting_overlay'));
         break;
       case 'custom':
-        if(card.message === '') card.message = '無訊息'
+        var message = card.message && card.message !== '' ?
+                        htmlEscape(card.message) : '無訊息';
         countdown = false;
-        if (card.message.indexOf('@cd') !== -1) {
+        if (message.indexOf('@cd') !== -1) {
           destDate = new Date();
           var arr = card.time.split(':');
           destDate.setHours(arr[0], arr[1], 0, 0);
           var milliTime = destDate.getTime();
           if (isNaN(milliTime)) {
-            card.message = card.message.replace('@cd', '<span class="lightgreen">時間格式錯誤</span>')
+            message = message.replace('@cd', '<span class="lightgreen">時間格式錯誤</span>')
           } else {
             var initCount = toHHMMSS(milliTime - Date.now());
-            card.message = card.message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue">' + initCount + '</span>&nbsp;&nbsp;&nbsp;');
+            message = message.replace('@cd', '&nbsp;&nbsp;&nbsp;<span class="countdown audioscale lightblue">' + initCount + '</span>&nbsp;&nbsp;&nbsp;');
             countdown = true;
           }
         }
 
         var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
-          .html('<div class="bottom-spacing">' + card.message + '</div>')
+          .html('<div class="bottom-spacing">' + message + '</div>')
         newCard.appendTo($('#waiting_overlay'));
         updateCountdown();
         break;
@@ -204,16 +205,16 @@ $(function() {
       scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + half.rule);
 
       scoreBoard.children('.' + halfkey + '.score').html(
-        pad(half.clan1.name, 6, ' ') +
+        pad(half.clan1.name, 6, '&nbsp;') +
         '&nbsp;&nbsp;&nbsp;&nbsp;<span class="audioscale"><span class="lightblue">' + half.clan1.score + '</span>：<span class="lightblue">' + half.clan2.score + '</span></span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        pad(half.clan2.name, 6, ' ', true)
+        pad(half.clan2.name, 6, '&nbsp;', true)
       );
 
       ingameOverlay.find('.' + halfkey).html(
         '<span class="lightblue">' + halftext + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        pad(half.clan1.name, 6, ' ') + ' [' + half.clan1.score + ']' +
+        pad(half.clan1.name, 6, '&nbsp;') + ' [' + half.clan1.score + ']' +
         '<span class="lightblue"> vs </span>' +
-        pad(half.clan2.name, 6, ' ') + ' [' + half.clan2.score + ']' +
+        pad(half.clan2.name, 6, '&nbsp;') + ' [' + half.clan2.score + ']' +
         '&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #' + half.rule
       )
     });
@@ -224,12 +225,12 @@ $(function() {
   fireInfo.on('value', function(result) {
     var info = result.val();
     $('.info').not('.removed').addClass('removing');
-    var spaces = Math.max(8,spaceLength(info.refuree), spaceLength(info.caster), spaceLength(info.broadcaster)) + 1;
+    var spaces = Math.max(8, spaceLength(info.refuree), spaceLength(info.caster), spaceLength(info.broadcaster)) + 1;
     var newCard = $('<div class="info infotext"/>')
       .css(defaultCardStyle)
-      .html('<div class="bottom-spacing">裁判 ' + pad(info.refuree, spaces, ' ') + '</div>' +
-        '<div class="bottom-spacing">賽評 ' + pad(info.caster, spaces, ' ') + '</div>' +
-        '<div class="bottom-spacing">轉播 ' + pad(info.broadcaster, spaces, ' ') + '</div>');
+      .html('<div class="bottom-spacing">裁判 ' + htmlEscape(pad(info.refuree, spaces, ' ')) + '</div>' +
+        '<div class="bottom-spacing">賽評 ' + htmlEscape(pad(info.caster, spaces, ' ')) + '</div>' +
+        '<div class="bottom-spacing">轉播 ' + htmlEscape(pad(info.broadcaster, spaces, ' ')) + '</div>');
     newCard.appendTo($('#waiting_overlay'));
   });
 
@@ -298,11 +299,10 @@ $(function() {
         }, 'swing')
         .end()
         .appendTo('#waiting_overlay');
-    }, 8000);
+    }, 3000);
 
   function pad(n, width, z, reverse) {
     z = z || '0';
-    if (z === ' ') z = '&nbsp';
     n = n + '';
     var length = spaceLength(n);
     if (length >= width) return n;
@@ -330,5 +330,15 @@ $(function() {
     } else {
       return [parseInt(second / 3600, 10), parseInt(second / 60 % 60,10), second % 60].join(":").replace(/\b(\d)\b/g, "0$1");
     }
+  }
+
+  function htmlEscape(str) {
+      return str
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\s/g, '&nbsp;');
   }
 });
