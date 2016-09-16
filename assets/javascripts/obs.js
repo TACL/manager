@@ -45,7 +45,6 @@ $(function() {
   bgAudio.prop('volume', 0);
 
   var audioSource = new AudioSource('bg_audio');
-  var canvasElement = document.getElementById('canvas');
 
   var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
   audioSource.onUpdate = function(data) {
