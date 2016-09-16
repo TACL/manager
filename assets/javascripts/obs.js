@@ -280,7 +280,8 @@ $(function() {
         .velocity('fadeOut', 1500)
         .velocity({
           scale: [0.7, 1],
-          blur: [10, 0]
+          blur: [10, 0],
+          left: [300, 0]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -292,14 +293,15 @@ $(function() {
         .velocity('fadeIn', 1500)
         .velocity({
           scale: [1, 1.4],
-          blur: [0, 10]
+          blur: [0, 10],
+          left: [0, -300]
         }, {
           duration: 1500,
           queue: false
         }, 'swing')
         .end()
         .appendTo('#waiting_overlay');
-    }, 3000);
+    }, 6000);
 
   function pad(n, width, z, reverse) {
     z = z || '0';
