@@ -7,7 +7,7 @@ var config = {
 };
 firebase.initializeApp(config);
 var database = firebase.database();
-
+var game = { season: '' };
 // Calculate width of text from DOM element or string. By Phil Freo <http://philfreo.com>
 $.fn.textWidth = function(text, font) {
     if (!$.fn.textWidth.fakeEl) $.fn.textWidth.fakeEl = $('<span>').hide().appendTo(document.body);
@@ -50,7 +50,7 @@ $(function() {
   var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
   audioSource.onUpdate = function(data) {
     var final = 0;
-    var careFreq = 80;
+    var careFreq = 15;
     for(var bin = 0; bin < careFreq; bin++) {
         var val = data[bin];
         final += val;
@@ -114,7 +114,7 @@ $(function() {
         var year = $('.ingame .season .year');
         var date = $('.ingame .season .date');
 
-        year.html(now.getFullYear() + ' <span class="lightblue">S4</span>');
+        year.html(now.getFullYear() + ' <span class="lightblue">S<span class="season-number">' + game.season + '</span></span>');
         date.html(monthArr[now.getMonth()] + ' ' + pad(now.getDate(), 2));
 
         year.css('transform', 'scaleX(' + 180 / year.textWidth() + ') translateY(10px)');
@@ -206,7 +206,7 @@ $(function() {
 
       scoreBoard.children('.' + halfkey + '.score').html(
         pad(half.clan1.name, 6, ' ') +
-        '&nbsp;&nbsp;<span class="audioscale"><span class="lightblue">' + half.clan1.score + '</span>：<span class="lightblue">' + half.clan2.score + '</span></span>&nbsp;&nbsp;' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;<span class="audioscale"><span class="lightblue">' + half.clan1.score + '</span>：<span class="lightblue">' + half.clan2.score + '</span></span>&nbsp;&nbsp;&nbsp;&nbsp;' +
         pad(half.clan2.name, 6, ' ', true)
       );
 
@@ -232,6 +232,13 @@ $(function() {
         '<div class="bottom-spacing">賽評 ' + pad(info.caster, spaces, ' ') + '</div>' +
         '<div class="bottom-spacing">轉播 ' + pad(info.broadcaster, spaces, ' ') + '</div>');
     newCard.appendTo($('#waiting_overlay'));
+  });
+
+  var fireGame = database.ref('game');
+  fireGame.on('value', function(result) {
+    game = result.val();
+    $('.season-number').text(game.season);
+    mainDate.text('TACL ' + now.getFullYear() + ' S' + game.season + ' ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
   });
 
   var firstLoaded = true;;
@@ -293,8 +300,6 @@ $(function() {
         .end()
         .appendTo('#waiting_overlay');
     }, 8000);
-
-  mainDate.text('TACL S4 ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
 
   function pad(n, width, z, reverse) {
     z = z || '0';
