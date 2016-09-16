@@ -26,6 +26,11 @@
     src: url(assets/fonts/DFHei-Bd-HK-BF.woff);
   }
 
+  .gpu {
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+  }
+
   #date {
     font-family: Arial Black, sans-serif;
     position: absolute;
@@ -180,7 +185,7 @@
   <div class="waiting">
     <div id="date"></div>
     <div id="waiting_overlay" class="blending">
-      <div id="scoreboard">
+      <div id="scoreboard" class="gpu">
         <div class="first halftext">上半場 賽制 #X</div>
         <div class="first score">Loading...</div>
         <div class="second halftext">下半場 賽制 #X</div>

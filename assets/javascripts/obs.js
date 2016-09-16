@@ -158,7 +158,7 @@ $(function() {
     countdown = false;
     switch (card.type) {
       case 'thanks':
-        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
+        var newCard = $('<div class="card infotext gpu"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">感謝您的收看 每週六日晚上八點</div>' +
             '<div class="bottom-spacing">敬請鎖定 TACL Twitch 頻道直播</div>');
         newCard.appendTo($('#waiting_overlay'));
@@ -181,7 +181,7 @@ $(function() {
           }
         }
 
-        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
+        var newCard = $('<div class="card infotext gpu"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">' + message + '</div>')
         newCard.appendTo($('#waiting_overlay'));
         updateCountdown();
@@ -226,7 +226,7 @@ $(function() {
     var info = result.val();
     $('.info').not('.removed').addClass('removing');
     var spaces = Math.max(8, spaceLength(info.refuree), spaceLength(info.caster), spaceLength(info.broadcaster)) + 1;
-    var newCard = $('<div class="info infotext"/>')
+    var newCard = $('<div class="info infotext gpu"/>')
       .css(defaultCardStyle)
       .html('<div class="bottom-spacing">裁判 ' + htmlEscape(pad(info.refuree, spaces, ' ')) + '</div>' +
         '<div class="bottom-spacing">賽評 ' + htmlEscape(pad(info.caster, spaces, ' ')) + '</div>' +
@@ -279,8 +279,8 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [0.7, 1],
-          blur: [10, 0]
+          scale: [1.5, 1],
+          blur: [5, 0]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -291,15 +291,15 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 1.4],
-          blur: [0, 10]
+          scale: [1, 0.7],
+          blur: [0, 5]
         }, {
           duration: 1500,
           queue: false
         }, 'swing')
         .end()
         .appendTo('#waiting_overlay');
-    }, 6000);
+    }, 8000);
 
   function pad(n, width, z, reverse) {
     z = z || '0';
