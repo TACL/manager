@@ -280,8 +280,7 @@ $(function() {
         .velocity('fadeOut', 1500)
         .velocity({
           scale: [0.7, 1],
-          blur: [10, 0],
-          left: [300, 0]
+          blur: [10, 0]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -293,8 +292,7 @@ $(function() {
         .velocity('fadeIn', 1500)
         .velocity({
           scale: [1, 1.4],
-          blur: [0, 10],
-          left: [0, -300]
+          blur: [0, 10]
         }, {
           duration: 1500,
           queue: false
