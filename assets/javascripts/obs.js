@@ -43,31 +43,31 @@ $(function() {
   var noSoundTime = 0;
 
   bgAudio.prop('volume', 0);
-  //
-  // var audioSource = new AudioSource('bg_audio');
-  //
-  // var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
-  // audioSource.onUpdate = function(data) {
-  //   var final = 0;
-  //   var careFreq = 15;
-  //   for(var bin = 0; bin < careFreq; bin++) {
-  //       var val = data[bin];
-  //       final += val;
-  //   }
-  //
-  //   var energy = final / careFreq / 256;
-  //
-  //   scale = 1;
-  //   power = Math.exp(energy);
-  //   scale = scale * power;
-  //   decayScale = Math.max(decayScale, scale);
-  //
-  //   smoothedScale += (decayScale - smoothedScale) * 0.3;
-  //
-  //   decayScale = decayScale * 0.985;
-  //
-  //   $('.audioscale').filter(':visible').css('transform', 'scale(' + smoothedScale + ')');
-  // }
+
+  var audioSource = new AudioSource('bg_audio');
+
+  var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
+  audioSource.onUpdate = function(data) {
+    var final = 0;
+    var careFreq = 15;
+    for(var bin = 0; bin < careFreq; bin++) {
+        var val = data[bin];
+        final += val;
+    }
+
+    var energy = final / careFreq / 256;
+
+    scale = 1;
+    power = Math.exp(energy);
+    scale = scale * power;
+    decayScale = Math.max(decayScale, scale);
+
+    smoothedScale += (decayScale - smoothedScale) * 0.3;
+
+    decayScale = decayScale * 0.985;
+
+    $('.audioscale').filter(':visible').css('transform', 'scale(' + smoothedScale + ')');
+  }
 
   function playNextSong() {
     bgAudio[0].pause();
@@ -279,7 +279,8 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [1.5, 1]
+          scale: [1.5, 1],
+          blur: [5, 0]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -290,7 +291,8 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 0.7]
+          scale: [1, 0.7],
+          blur: [0, 5]
         }, {
           duration: 1500,
           queue: false
