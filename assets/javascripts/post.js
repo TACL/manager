@@ -44,17 +44,16 @@ $(function() {
           ctx.font = "45px '微軟正黑體'";
           ctx.textAlign = 'right';
           textGlow(players[0], centerX - playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
-          drawImage(getRaceImg(), { left: centerX - playerSpace, top: 320 + i * 150, width:65, height: 65, opacity: 0.75, glow: '#00ccff'})();
+          drawImage(getRaceImg(), { left: centerX - playerSpace, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#00ccff'})();
           ctx.textAlign = 'left';
           textGlow(players[1], centerX + playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
-          drawImage(getRaceImg(), { left: centerX + playerSpace - 65, top: 320 + i * 150, width:65, height: 65, opacity: 0.75, glow: '#00ccff'})();
+          drawImage(getRaceImg(), { left: centerX + playerSpace - 65, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#00ccff'})();
 
 
           ctx.textAlign = 'center';
 
           ctx.font = "35px '微軟正黑體'";
           var map = getMap();
-          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#00ffff', 20, 0);
         }
       }
       drawlogo();
