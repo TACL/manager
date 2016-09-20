@@ -47,9 +47,9 @@ $(function() {
   var audioSource = new AudioSource('bg_audio');
 
   var power, energy, scale = 1, decayScale = 0, smoothedScale = 0, decayScale = 0;
+  var careFreq = 80;
   audioSource.onUpdate = function(data) {
     var final = 0;
-    var careFreq = 15;
     for(var bin = 0; bin < careFreq; bin++) {
         var val = data[bin];
         final += val;

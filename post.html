@@ -38,31 +38,18 @@
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li><a href="set.html">直播</a></li>
-          <li><a href="post.html">貼文</a></li>
-          <li class="active"><a href="#">說明</a></li>
+          <li class="active"><a href="#">貼文</a></li>
+          <li><a href="help.html">說明</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </nav>
   <div class="container">
-    <p>在OBS中，在來源按 <i class="fa fa-plus"></i> 新增 <strong>BrowserSource</strong></p>
-    <p>
-      於URL中 填寫<div class="well">https://fonger.github.io/TACL/obs.html</div>
-      <strong>Width</strong> 設為 <strong>1920</strong>，<strong>Height</strong> 設為 <strong>1080</strong>，然後按確定後將他拖曳到星海的前面，蓋過整個星海畫面即可。
-    </p>
-    <div class="login alert alert-warning">
-      如果畫面跑掉，請確定OBS的設定→來源(全畫面)解析度為1920x1080
-    </div>
-    <img src="assets/images/obs_settings.png" width="100%">
-    <div>
-      <hr>
-      <center>
-        &copy; 2016 TACL Made by <a href="https://www.facebook.com/thespycraft" target="_blank">SpyCraft 實況工作室</a><br>
-        Bug 回報或建議請<a href="https://www.facebook.com/messages/thespycraft" target="_blank">點此私訊粉絲專頁</a>
-      </center>
-    </div>
+    <canvas id="canvas" width="1920" height="1080" style="width:100%; height: auto; border:2px solid #000000;">
+    </canvas>
   </div>
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+  <script src="assets/javascripts/post.js"></script>
 </body>
 </html>
