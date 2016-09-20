@@ -23,7 +23,7 @@
 
   @font-face {
     font-family: '華康粗黑體';
-    src: url(assets/fonts/DFHei-Bd-HK-BF.woff);
+    src: url(../assets/fonts/DFHei-Bd-HK-BF.woff);
   }
 
   .gpu {
@@ -125,7 +125,7 @@
   #ingame_overlay {
     position: absolute;
     color: #fff;
-    background-image: url('assets/images/ingame_overlay_bg.png');
+    background-image: url('../assets/images/ingame_overlay_bg.png');
     top: 901px;
     left: 291px;
     width: 1063px;
@@ -175,11 +175,11 @@
 </head>
 <body>
   <video id="bg_video" class="waiting" width="1920" height="1080" playsinline autoplay muted loop>
-    <source src="assets/videos/bg_video_0916.mp4" type="video/mp4">
+    <source src="../assets/videos/bg_video_0916.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
   <audio id="bg_audio" crossOrigin="anonymous" loop>
-    <source src="assets/musics/eclipse.mp3" type="audio/mpeg">
+    <source src="../assets/musics/eclipse.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
   <div class="waiting">
@@ -209,14 +209,14 @@
         </div>
       </div>
     <div>
-      <img src="assets/images/ingame_overlay_link.png" id="overlay_link_image" />
+      <img src="../assets/images/ingame_overlay_link.png" id="overlay_link_image" />
     </div>
   </div>
   <script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
-  <script src="assets/javascripts/audioSource.js"></script>
-  <script src="assets/javascripts/obs.js"></script>
+  <script src="../assets/javascripts/audioSource.js"></script>
+  <script src="../assets/javascripts/obs.js"></script>
 </body>
 
 </html>

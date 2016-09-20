@@ -71,7 +71,7 @@ $(function() {
 
   function playNextSong() {
     bgAudio[0].pause();
-    bgAudio[0].src='https://fonger.github.io/TACL/assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
+    bgAudio[0].src='https://tacl.github.io/manager/assets/musics/' + musicArr[waitingCounter++ % musicArr.length]
     bgAudio[0].crossOrigin = 'anonymous';
     bgAudio[0].load();
     bgAudio[0].oncanplaythrough = function() {
