@@ -54,6 +54,7 @@ $(function() {
 
           ctx.font = "35px '微軟正黑體'";
           var map = getMap();
+          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#00ccff', 25, 0);
         }
       }
       drawlogo();
