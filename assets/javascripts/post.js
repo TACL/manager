@@ -5,13 +5,13 @@ $(function() {
   redraw();
 
   function redraw() {
-    var drawbg = bgURL ? drawImage(bgURL, { opacity: 0.4 }) : function(){ return $.Deferred().resolve().promise() };
+    var drawbg = bgURL ? drawImage(bgURL, { opacity: 0.4 }) : function(){ return $.when(); };
     var drawlogo = drawImage('assets/images/fbpost_overlay.png');
 
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, 1920, 1080);
 
-    drawbg().then(drawlogo).done(function() {
+    drawbg().done(function() {
       var centerX = 960;
       ctx.save();
       ctx.font = "bold 80px '微軟正黑體'";
@@ -31,9 +31,9 @@ $(function() {
         var clans = getClans();
         ctx.font = "bold 75px '微軟正黑體'";
         ctx.textAlign = 'right';
-        textGlow(clans[0], centerX-80, 180, 'white', '#00ccff', 50, 1);
+        textGlow(clans[0], centerX-80, 180, 'white', '#00ccff', 30, 1);
         ctx.textAlign = 'left';
-        textGlow(clans[1], centerX+80, 180, 'white', '#00ccff', 50, 1);
+        textGlow(clans[1], centerX+80, 180, 'white', '#00ccff', 30, 1);
         ctx.textAlign = 'center';
         ctx.fillStyle = '#11cfff';
         textGlow('vs', centerX, 180, '11ccff', '#00ccff', 50, 1);
@@ -43,10 +43,10 @@ $(function() {
           ctx.fillStyle = 'white';
           ctx.font = "45px '微軟正黑體'";
           ctx.textAlign = 'right';
-          textGlow(players[0], centerX - playerSpace, 320 + i * 150, 'white', '#00ccff', 50, 1);
+          textGlow(players[0], centerX - playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
           drawImage(getRaceImg(), { left: centerX - playerSpace, top: 320 + i * 150, width:65, height: 65, opacity: 0.75, glow: '#00ccff'})();
           ctx.textAlign = 'left';
-          textGlow(players[1], centerX + playerSpace, 320 + i * 150, 'white', '#00ccff', 50, 1);
+          textGlow(players[1], centerX + playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
           drawImage(getRaceImg(), { left: centerX + playerSpace - 65, top: 320 + i * 150, width:65, height: 65, opacity: 0.75, glow: '#00ccff'})();
 
 
@@ -54,9 +54,10 @@ $(function() {
 
           ctx.font = "35px '微軟正黑體'";
           var map = getMap();
-          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#000', 50, 1);
+          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#00ffff', 20, 0);
         }
       }
+      drawlogo();
     });
   }
   function textGlow(text, x, y, color, glowColor, blur, level) {
@@ -65,10 +66,10 @@ $(function() {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
     ctx.shadowBlur = blur;
+    ctx.fillStyle = color;
     for (var i = 0; i < level; i++) {
       ctx.fillText(text, x, y);
     }
-    ctx.fillStyle = color;
     ctx.fillText(text, x, y);
     ctx.restore();
   }
