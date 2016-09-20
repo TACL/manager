@@ -14,13 +14,13 @@ $(function() {
     drawbg().done(function() {
       var centerX = 960;
       ctx.save();
-      ctx.font = "bold 80px '微軟正黑體'";
+      ctx.font = "bold 80px 'Times New Roman', '微軟正黑體'";
       ctx.fillStyle = 'white';
       ctx.textAlign = 'center'
       ctx.textBaseline = 'top';
       //ctx.fillText('TACL S4 9/20 賽程表', centerX, 50);
 
-      textGlow('TACL S4 9/20 賽程表', centerX, 50, 'white', '#00ccff', 50, 1);
+      textGlow('TACL S4 假的賽程表', centerX, 50, 'white', '#00ccff', 50, 1);
 
       var halfSpace = -70;
       var playerSpace = 80;
@@ -29,32 +29,32 @@ $(function() {
       for (var half = 0; half < 2; half++) {
         centerX = halfCenters[half];
         var clans = getClans();
-        ctx.font = "bold 75px '微軟正黑體'";
+        ctx.font = "bold 75px 'Times New Roman'";
         ctx.textAlign = 'right';
-        textGlow(clans[0], centerX-80, 180, 'white', '#00ccff', 30, 1);
+        textGlow(clans[0], centerX-80, 200, 'white', '#00ccff', 30, 1);
         ctx.textAlign = 'left';
-        textGlow(clans[1], centerX+80, 180, 'white', '#00ccff', 30, 1);
+        textGlow(clans[1], centerX+80, 200, 'white', '#00ccff', 30, 1);
         ctx.textAlign = 'center';
         ctx.fillStyle = '#11cfff';
-        textGlow('vs', centerX, 180, '11ccff', '#00ccff', 50, 1);
+        textGlow('vs', centerX, 200, '11ccff', '#00f', 50, 1);
 
         for (var i = 0; i < 4; i++) {
           var players = getPlayers();
           ctx.fillStyle = 'white';
-          ctx.font = "45px '微軟正黑體'";
+          ctx.font = "46px '微軟正黑體'";
           ctx.textAlign = 'right';
-          textGlow(players[0], centerX - playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
-          drawImage(getRaceImg(), { left: centerX - playerSpace, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#00ccff'})();
+          textGlow(players[0], centerX - playerSpace, 320 + i * 150, 'white', '#00ccff', 30, 1);
+          drawImage(getRaceImg(), { left: centerX - playerSpace, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#fff'})();
           ctx.textAlign = 'left';
-          textGlow(players[1], centerX + playerSpace, 320 + i * 150, 'white', '#00ccff', 20, 0);
-          drawImage(getRaceImg(), { left: centerX + playerSpace - 65, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#00ccff'})();
+          textGlow(players[1], centerX + playerSpace, 320 + i * 150, 'white', '#00ccff', 30, 1);
+          drawImage(getRaceImg(), { left: centerX + playerSpace - 65, top: 320 + i * 150, width:65, height: 65, opacity: 0.85, glow: '#fff'})();
 
 
           ctx.textAlign = 'center';
 
-          ctx.font = "35px '微軟正黑體'";
+          ctx.font = "38px '微軟正黑體'";
           var map = getMap();
-          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#00ccff', 25, 0);
+          textGlow(map.name + ' ' + map.en, centerX, 390 + i * 150, '#11ccff', '#00e', 25, 1);
         }
       }
       drawlogo();
