@@ -76,7 +76,7 @@ $(function() {
     bgAudio[0].load();
     bgAudio[0].oncanplaythrough = function() {
       bgAudio[0].play();
-      bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
+      bgAudio.stop(true, false).animate({volume: 0.25}, 3000);
     }
   }
   var defaultCardStyle = {
@@ -92,7 +92,7 @@ $(function() {
             playNextSong();
           } else {
             bgAudio[0].play();
-            bgAudio.stop(true, false).animate({volume: 0.35}, 3000);
+            bgAudio.stop(true, false).animate({volume: 0.25}, 3000);
           }
         }
         bgVideo[0].play();
