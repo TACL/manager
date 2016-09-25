@@ -83,7 +83,8 @@ $(function() {
     display: 'none'
   };
   fireStates.child('scene').on('value', function(result) {
-    switch (result.val()) {
+    game.scene = result.val();
+    switch (game.scene) {
       case 'waiting':
         if (Date.now() - noSoundTime > 15000) {
           playNextSong();
@@ -135,7 +136,8 @@ $(function() {
     }
   });
   fireStates.child('half').on('value', function(result) {
-    switch (result.val()) {
+    game.half = result.val();
+    switch (game.half) {
       case 'first':
         first.removeClass('semitrans');
         second.addClass('semitrans');
@@ -149,6 +151,7 @@ $(function() {
         second.removeClass('semitrans');
         break;
     }
+    redraw();
   });
   var countdown = false;
   var destDate;
@@ -195,8 +198,10 @@ $(function() {
   var fireScore = database.ref('score');
   fireScore.on('value', function(result) {
     var score = result.val();
+    game.score = score;
     //scoreBoard.text(JSON.stringify(score));
     //ingameScoreboard.text(JSON.stringify(score));
+    redraw();
 
     $.each(['first', 'second'], function(i, halfkey) {
       var half = score[halfkey];
@@ -218,7 +223,6 @@ $(function() {
         '&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #' + half.rule
       )
     });
-
   });
 
   var fireInfo = database.ref('info');
@@ -249,6 +253,51 @@ $(function() {
     firstLoaded = false;
   });
 
+  var canvas = $('#canvas')[0];
+  var ctx = canvas.getContext('2d');
+  function redraw() {
+    if (!game.score) return;
+    if (game.half === 'final') return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var centerX = 650;
+    ctx.save();
+    ctx.font = "bold 80px 'Times New Roman', '微軟正黑體'";
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'top';
+
+    var halfSpace = -70;
+    var playerSpace = 80;
+    var half = game.score[game.half];
+    ctx.font = "bold 50px 'Times New Roman'";
+    ctx.textAlign = 'right';
+    textGlow(half.clan1.name + ' [' + half.clan1.score + ']', centerX-80, 0, 'white', '#00ccff', 30, 1);
+    ctx.textAlign = 'left';
+    textGlow('[' + half.clan2.score + '] ' + half.clan2.name, centerX+80, 0, 'white', '#00ccff', 30, 1);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#11cfff';
+    textGlow('vs', centerX, 0, '11ccff', '#00f', 50, 1);
+
+    for (var i = 0; i < 4; i++) {
+      ctx.fillStyle = 'white';
+      ctx.font = "46px '微軟正黑體'";
+      ctx.textAlign = 'right';
+      var player1 = half.clan1.players[i];
+      textGlow(player1.name, centerX - playerSpace, 80 + i * 80, 'white', '#00ccff', 30, 1);
+      drawImage(getRaceImg(player1.race), { left: centerX - playerSpace, top: 80 + i * 80, width:65, height: 65, opacity: 0.85, glow: '#fff'})();
+      ctx.textAlign = 'left';
+      var player2 = half.clan2.players[i];
+      textGlow(player2.name, centerX + playerSpace, 80 + i * 80, 'white', '#00ccff', 30, 1);
+      drawImage(getRaceImg(player2.race), { left: centerX + playerSpace - 65, top: 80 + i * 80, width:65, height: 65, opacity: 0.85, glow: '#fff'})();
+
+      ctx.textAlign = 'left';
+      ctx.font = "38px '微軟正黑體'";
+      textGlow(half.maps[i], centerX + 400, 80 + i * 80, '#11ccff', '#00e', 25, 1);
+    }
+  }
+
   $("#ingame_overlay > div:gt(0)").hide();
 
   setInterval(function() {
@@ -265,6 +314,49 @@ $(function() {
   function updateCountdown() {
     if (countdown) {
       $('.countdown').filter(':visible').html(toHHMMSS(destDate.getTime() - Date.now()));
+    }
+  }
+
+  function textGlow(text, x, y, color, glowColor, blur, level) {
+    ctx.save();
+    ctx.shadowColor = glowColor;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = blur;
+    ctx.fillStyle = color;
+    for (var i = 0; i < level; i++) {
+      ctx.fillText(text, x, y);
+    }
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+
+  function getRaceImg(race) {
+    return '../assets/images/race' + race + '.png';
+  }
+
+  function drawImage(url, options) {
+    return function() {
+      var deferred = $.Deferred();
+      var img = new Image;
+      if (!options) options = {};
+      img.onload = function(){
+        ctx.save();
+        if (options.opacity) {
+          ctx.globalAlpha = options.opacity;
+        }
+        if (options.glow) {
+          ctx.shadowColor = options.glow;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+          ctx.shadowBlur = 20;
+        }
+        ctx.drawImage(img, options.left || 0, options.top || 0, options.width || 1920, options.height || 1080);
+        ctx.restore();
+        deferred.resolve();
+      };
+      img.src = url;
+      return deferred.promise();
     }
   }
 
