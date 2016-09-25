@@ -84,6 +84,9 @@ $(function() {
       redraw();
     }
   })
+  $('#title').on('input', function(event) {
+      redraw();
+  });
 
   function redraw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -102,7 +105,7 @@ $(function() {
       ctx.textBaseline = 'top';
       //ctx.fillText('TACL S4 9/20 賽程表', centerX, 50);
 
-      textGlow('TACL S4 9/25 賽程表', centerX, 50, 'white', '#00ccff', 50, 1);
+      textGlow($('#title').val(), centerX, 50, 'white', '#00ccff', 50, 1);
 
       var halfSpace = -70;
       var playerSpace = 80;
