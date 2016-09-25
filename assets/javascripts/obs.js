@@ -251,8 +251,8 @@ $(function() {
     firstLoaded = false;
   });
 
-  var canvas = $('#canvas')[0];
-  var ctx = canvas.getContext('2d');
+  //var canvas = $('#canvas')[0];
+  //var ctx = canvas.getContext('2d');
   function redraw() {
     if (!game.score) return;
     if (game.half === 'final') return;
