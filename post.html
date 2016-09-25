@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TACL 直播後台 1.2.0</title>
+  <title>TACL 直播後台 1.3.0</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha256-ZT4HPpdCOt2lvDkXokHuhJfdOKSPFLzeAJik5U/Q+l4=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" integrity="sha256-AIodEDkC8V/bHBkfyxzolUMw57jeQ9CauwhVW6YJ9CA=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css" integrity="sha256-6pWNO2Viaad+qrj8CQ4U9iYrylSPRgLOzaHGtCba1f4=" crossorigin="anonymous" />
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -20,6 +21,36 @@
       padding-top:70px;
       font-family: 微軟正黑體, Arial Narrow, sans-serif;
       -webkit-font-smoothing: antialiased;
+    }
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      text-align: center;
+      vertical-align: middle;
+      z-index: 500;
+      color: #fff;
+    }
+    #loading > h1 {
+      position: absolute;
+      width: 200px;
+      height: 100px;
+      top: 50%;
+      left: 50%;
+      margin-left: -100px;
+      margin-top: -50px;
+    }
+    .title-help {
+      font-size: 12px;
+    }
+    .custom-helptext {
+      padding-top: 5px;
+    }
+    .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+      z-index: inherit;
     }
   </style>
 </head>
@@ -33,7 +64,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">TACL 直播後台 1.2.0</a>
+        <a class="navbar-brand" href="#">TACL 直播後台 1.3.0</a>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
@@ -44,12 +75,590 @@
       </div><!--/.nav-collapse -->
     </div>
   </nav>
-  <div class="container">
-    <canvas id="canvas" width="1920" height="1080" style="width:100%; height: auto; border:2px solid #000000;">
-    </canvas>
+  <div id="loading">
+    <h1><i class="fa fa-refresh fa-spin"></i> 連線中...</h1>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="loginModal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">請輸入密碼</h4>
+          </div>
+          <div class="modal-body">
+            <input type="password" id="password" class="form-control">
+            <div class="login alert alert-warning" style="display: none">
+              <span id="login_error_msg"></span>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <i id="login_spinner" class="fa fa-refresh fa-spin" style="display: none"></i> &nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary" id="btn_login">確定</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="alert alert-warning">
+      <strong>警告</strong> 更改此處設定會同步影響到直播畫面
+    </div>
+    <div>
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#first_tab" aria-controls="first_tab" role="tab" data-toggle="tab">上半場</a></li>
+        <li role="presentation"><a href="#second_tab" aria-controls="second_tab" role="tab" data-toggle="tab">下半場</a></li>
+        <li role="presentation"><a href="#result_tab" aria-controls="result_tab" role="tab" data-toggle="tab">輸出圖片</a></li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="first_tab">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">賽制</label>
+              <div class="col-sm-11">
+                <select class="selectpicker form-control" data-realtime data-target="score/first/rule">
+                  <option value="A" data-subtext="不限階級">賽制 #A</option>
+                  <option value="B" data-subtext="偶數場次鑽石以下">賽制 #B</option>
+                  <option value="C" data-subtext="奇鑽石以下，偶白金以下">賽制 #C</option>
+                  <option value="+" data-subtext="特殊賽制允許重複選手二場">特殊賽制 +</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">戰隊</label>
+              <div class="col-sm-5 col-xs-6">
+                <select class="form-control first clan1" data-realtime data-target="score/first/clan1/name">
+                  <option value="Rush">Rush</option>
+                  <option value="Milles">Milles</option>
+                  <option value="SPTS">SPTS</option>
+                  <option value="StorM">StorM</option>
+                  <option value="TDT">TDT</option>
+                </select>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">戰隊</label>
+              <div class="col-sm-5 col-xs-6">
+                <select class="form-control first clan2" data-realtime data-target="score/first/clan2/name">
+                  <option value="Rush">Rush</option>
+                  <option value="Milles"> Clan</option>
+                  <option value="SPTS">SPTS</option>
+                  <option value="StorM">StorM</option>
+                  <option value="TDT">TDT</option>
+                </select>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 1</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control first rule" data-realtime data-target="score/first/maps/0">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan1/players/0/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan1/players/0/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan1/players/0/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan2/players/0/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan2/players/0/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan2/players/0/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 2</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control first rule" data-realtime data-target="score/first/maps/1">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan1/players/1/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan1/players/1/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan1/players/1/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan2/players/1/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan2/players/1/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan2/players/1/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 3</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control first rule" data-realtime data-target="score/first/maps/2">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan1/players/2/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan1/players/2/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan1/players/2/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan2/players/2/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan2/players/2/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan2/players/2/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 4</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control first rule" data-realtime data-target="score/first/maps/3">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan1/players/3/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan1/players/3/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan1/players/3/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/first/clan2/players/3/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/first/clan2/players/3/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/first/clan2/players/3/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="second_tab">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">賽制</label>
+              <div class="col-sm-11">
+                <select class="selectpicker form-control" data-realtime data-target="score/second/rule">
+                  <option value="A" data-subtext="不限階級">賽制 #A</option>
+                  <option value="B" data-subtext="偶數場次鑽石以下">賽制 #B</option>
+                  <option value="C" data-subtext="奇鑽石以下，偶白金以下">賽制 #C</option>
+                  <option value="+" data-subtext="特殊賽制允許重複選手二場">特殊賽制 +</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">戰隊</label>
+              <div class="col-sm-5 col-xs-6">
+                <select class="form-control second clan1" data-realtime data-target="score/second/clan1/name">
+                  <option value="Rush">Rush</option>
+                  <option value="Milles">Milles</option>
+                  <option value="SPTS">SPTS</option>
+                  <option value="StorM">StorM</option>
+                  <option value="TDT">TDT</option>
+                </select>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">戰隊</label>
+              <div class="col-sm-5 col-xs-6">
+                <select class="form-control second clan2" data-realtime data-target="score/second/clan2/name">
+                  <option value="Rush">Rush</option>
+                  <option value="Milles"> Clan</option>
+                  <option value="SPTS">SPTS</option>
+                  <option value="StorM">StorM</option>
+                  <option value="TDT">TDT</option>
+                </select>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 1</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control second rule" data-realtime data-target="score/second/maps/0">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan1/players/0/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan1/players/0/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan1/players/0/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan2/players/0/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan2/players/0/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan2/players/0/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 2</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control second rule" data-realtime data-target="score/second/maps/1">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan1/players/1/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan1/players/1/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan1/players/1/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan2/players/1/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan2/players/1/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan2/players/1/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 3</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control second rule" data-realtime data-target="score/second/maps/2">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan1/players/2/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan1/players/2/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan1/players/2/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan2/players/2/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan2/players/2/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan2/players/2/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4><i class="fa fa-rocket"></i> 場次 4</h4>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">地圖</label>
+              <div class="col-sm-11 col-xs-12">
+                <select class="form-control second rule" data-realtime data-target="score/second/maps/3">
+                  <option value="新蓋茨堡 New GettysBurg">新蓋茨堡</option>
+                  <option value="冰凍神殿 Frozen Temple">冰凍神殿</option>
+                  <option value="冰霜之地 Frost">冰霜之地</option>
+                  <option value="神性之地 Apotheosis">神性之地</option>
+                  <option value="世宗研究站 King Sejong Station">世宗研究站</option>
+                  <option value="茶山科學研究站 Dason Station">茶山科學研究站</option>
+                  <option value="銀河天堂路 Galactic Process">銀河天堂路</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan1/players/3/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan1/players/3/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan1/players/3/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label class="col-sm-1 hidden-xs control-label">選手</label>
+              <div class="col-sm-5 col-xs-6">
+                <div class="input-group">
+                  <input class="form-control" data-realtime data-target="score/second/clan2/players/3/name"/>
+                  <div class="input-group-btn">
+                    <select class="selectpicker hidden-xs" data-width="fit" data-realtime data-target="score/second/clan2/players/3/race">
+                      <option value="T" data-content="<img src='assets/images/raceT.png' width='20px' height='20px' /> 人類"></option>
+                      <option value="Z" data-content="<img src='assets/images/raceZ.png' width='20px' height='20px' /> 蟲族"></option>
+                      <option value="P" data-content="<img src='assets/images/raceP.png' width='20px' height='20px' /> 神族"></option>
+                      <option value="R" data-content="<img src='assets/images/raceR.png' width='20px' height='20px' /> 隨機"></option>
+                    </select>
+                    <select class="selectpicker visible-xs" data-width="fit" data-mobile="true" data-realtime data-target="score/second/clan2/players/3/race">
+                      <option value="T">T</option>
+                      <option value="Z">Z</option>
+                      <option value="P">P</option>
+                      <option value="R">R</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="result_tab">
+          <canvas id="canvas" width="1920" height="1080" style="width:100%; height: auto; border:2px solid #000000;">
+          </canvas>
+          <p>請勿截圖，使用Chrome按右鍵另存圖檔高畫質</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js" integrity="sha256-NpjFqxNtMOVQfuoDn4f9ZgUe3ua/MTbmkM8kl+mfU70=" crossorigin="anonymous"></script>
   <script src="assets/javascripts/post.js"></script>
 </body>
 </html>
