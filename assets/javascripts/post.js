@@ -1,7 +1,13 @@
 $(function() {
   var canvas = $('#canvas')[0];
   var ctx = canvas.getContext('2d');
-  var bgURL = 'https://images6.alphacoders.com/392/392895.jpg';
+  var bgList = [
+    'http://1920x1080hdwallpapers.com/image/201512/games/3859/starcraft-2-legacy-of-void-spear-of-adun-art.jpg',
+    'https://images6.alphacoders.com/392/392895.jpg',
+    'https://images.alphacoders.com/464/464155.jpg',
+    'http://wallpaperswide.com/download/starcraft_ii_heart_of_the_swarm___zerg_hive-wallpaper-1920x1080.jpg'
+  ];
+  var bgURL = bgList[Math.floor(Math.random() * bgList.length)];
   redraw();
 
   var real_clans = [['Milles', 'TDT'], ['Milles', 'SPTS']];
