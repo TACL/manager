@@ -151,7 +151,6 @@ $(function() {
         second.removeClass('semitrans');
         break;
     }
-    redraw();
   });
   var countdown = false;
   var destDate;
@@ -201,7 +200,6 @@ $(function() {
     game.score = score;
     //scoreBoard.text(JSON.stringify(score));
     //ingameScoreboard.text(JSON.stringify(score));
-    redraw();
 
     $.each(['first', 'second'], function(i, halfkey) {
       var half = score[halfkey];
