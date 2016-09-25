@@ -42,10 +42,10 @@ $(function() {
       var halfSpace = -70;
       var playerSpace = 80;
       var halfCenters = [480 - halfSpace, 1440 + halfSpace];
-
+      var clans;
       for (var half = 0; half < 2; half++) {
         centerX = halfCenters[half];
-        var clans = getClans(half);
+        clans = getClans(half);
         ctx.font = "bold 75px 'Times New Roman'";
         ctx.textAlign = 'right';
         textGlow(clans[0], centerX-80, 200, 'white', '#00ccff', 30, 1);
@@ -57,7 +57,6 @@ $(function() {
 
         for (var i = 0; i < 4; i++) {
           var players = getPlayers(half, i);
-          console.log(players);
           ctx.fillStyle = 'white';
           ctx.font = "46px '微軟正黑體'";
           ctx.textAlign = 'right';
@@ -91,9 +90,9 @@ $(function() {
     ctx.restore();
   }
 
-  function getClans(i) {
-    if(real_clans && i) {
-      return real_clans[i];
+  function getClans(half) {
+    if(real_clans) {
+      return real_clans[half];
     }
     var clans = ['Rush', 'StroM', 'TDT', 'Milles', 'SPTS'];
     var c1 = Math.floor(Math.random() * clans.length);
