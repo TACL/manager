@@ -86,6 +86,7 @@ $(function() {
   })
 
   function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     var drawbg = bgURL ? drawImage(bgURL, { opacity: 0.4 }) : function(){ return $.when(); };
     var drawlogo = drawImage('assets/images/fbpost_overlay.png');
 
