@@ -235,7 +235,7 @@ $(function() {
         '<div class="bottom-spacing">轉播 ' + htmlEscape(pad(info.broadcaster, spaces, ' ')) + '</div>');
     newCard.appendTo($('#waiting_overlay'));
   });
-
+  
   var fireGame = database.ref('game');
   fireGame.on('value', function(result) {
     game = result.val();
