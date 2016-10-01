@@ -235,7 +235,7 @@ $(function() {
         '<div class="bottom-spacing">轉播 ' + htmlEscape(pad(info.broadcaster, spaces, ' ')) + '</div>');
     newCard.appendTo($('#waiting_overlay'));
   });
-  
+
   var fireGame = database.ref('game');
   fireGame.on('value', function(result) {
     game = result.val();
@@ -369,8 +369,7 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [1.5, 1],
-          blur: [5, 0]
+          scale: [1.5, 1]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -381,8 +380,7 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 0.7],
-          blur: [0, 5]
+          scale: [1, 0.7]
         }, {
           duration: 1500,
           queue: false
