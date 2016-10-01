@@ -160,7 +160,7 @@ $(function() {
     countdown = false;
     switch (card.type) {
       case 'thanks':
-        var newCard = $('<div class="card infotext gpu"/>').css(defaultCardStyle)
+        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">感謝您的收看 每週六日晚上八點</div>' +
             '<div class="bottom-spacing">敬請鎖定 TACL Twitch 頻道直播</div>');
         newCard.appendTo($('#waiting_overlay'));
@@ -183,7 +183,7 @@ $(function() {
           }
         }
 
-        var newCard = $('<div class="card infotext gpu"/>').css(defaultCardStyle)
+        var newCard = $('<div class="card infotext"/>').css(defaultCardStyle)
           .html('<div class="bottom-spacing">' + message + '</div>')
         newCard.appendTo($('#waiting_overlay'));
         updateCountdown();
@@ -228,7 +228,7 @@ $(function() {
     var info = result.val();
     $('.info').not('.removed').addClass('removing');
     var spaces = Math.max(8, spaceLength(info.refuree), spaceLength(info.caster), spaceLength(info.broadcaster)) + 1;
-    var newCard = $('<div class="info infotext gpu"/>')
+    var newCard = $('<div class="info infotext"/>')
       .css(defaultCardStyle)
       .html('<div class="bottom-spacing">裁判 ' + htmlEscape(pad(info.refuree, spaces, ' ')) + '</div>' +
         '<div class="bottom-spacing">賽評 ' + htmlEscape(pad(info.caster, spaces, ' ')) + '</div>' +
