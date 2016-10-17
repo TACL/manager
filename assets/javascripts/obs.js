@@ -311,7 +311,7 @@ $(function() {
 
   function updateCountdown() {
     if (countdown) {
-      $('.countdown').filter(':visible').html(toHHMMSS(destDate.getTime() - Date.now()));
+      $('.countdown').html(toHHMMSS(destDate.getTime() - Date.now()));
     }
   }
 
