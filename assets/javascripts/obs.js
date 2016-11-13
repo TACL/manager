@@ -37,7 +37,7 @@ $(function() {
   var fireStates = database.ref('states');
 
   var monthArr = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-  var musicArr = ['guardiansAtTheGate.mp3','aboveAndBeyond.mp3', 'firefly.mp3', 'spectre.mp3', 'eclipse.mp3', 'letgo.mp3'];
+  var musicArr = ['firefly.mp3', 'spectre.mp3', 'eclipse.mp3', 'letgo.mp3'];
 
   var waitingCounter = 0;
   var noSoundTime = 0;
@@ -208,16 +208,16 @@ $(function() {
       scoreBoard.children('.' + halfkey + '.halftext').html(halftext + ' 賽制 #' + half.rule);
 
       scoreBoard.children('.' + halfkey + '.score').html(
-        pad(half.clan1.name, 6, '&nbsp;') +
+        pad(half.clan1.name, 7, '&nbsp;') +
         '&nbsp;&nbsp;&nbsp;&nbsp;<span class="audioscale"><span class="lightblue">' + half.clan1.score + '</span>：<span class="lightblue">' + half.clan2.score + '</span></span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        pad(half.clan2.name, 6, '&nbsp;', true)
+        pad(half.clan2.name, 7, '&nbsp;', true)
       );
 
       ingameOverlay.find('.' + halfkey).html(
         '<span class="lightblue">' + halftext + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        pad(half.clan1.name, 6, '&nbsp;') + ' [' + half.clan1.score + ']' +
+        pad(half.clan1.name, 7, '&nbsp;') + ' [' + half.clan1.score + ']' +
         '<span class="lightblue"> vs </span>' +
-        pad(half.clan2.name, 6, '&nbsp;') + ' [' + half.clan2.score + ']' +
+        pad(half.clan2.name, 7, '&nbsp;') + ' [' + half.clan2.score + ']' +
         '&nbsp;&nbsp;&nbsp;<span class="lightblue">賽制</span> #' + half.rule
       )
     });
@@ -369,8 +369,7 @@ $(function() {
       stack.first()
         .velocity('fadeOut', 1500)
         .velocity({
-          scale: [1.5, 1],
-          blur: [5, 0]
+          scale: [1.5, 1]
         }, {
           complete: function() {
               $(this).filter('.removing').addClass('removed').removeClass('removing');
@@ -381,8 +380,7 @@ $(function() {
         .nextAll(':not(.removed):first')
         .velocity('fadeIn', 1500)
         .velocity({
-          scale: [1, 0.7],
-          blur: [0, 5]
+          scale: [1, 0.7]
         }, {
           duration: 1500,
           queue: false
