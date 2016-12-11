@@ -48,7 +48,6 @@ $(function() {
   var canvas = $('#canvas')[0];
   var ctx = canvas.getContext('2d');
   var bgList = [
-    './assets/images/background/zerg.jpg',
     'http://1920x1080hdwallpapers.com/image/201512/games/3859/starcraft-2-legacy-of-void-spear-of-adun-art.jpg',
     'https://images6.alphacoders.com/392/392895.jpg',
     'https://images.alphacoders.com/464/464155.jpg',
