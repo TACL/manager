@@ -252,7 +252,9 @@ $(function() {
 
   var fireGame = database.ref('game');
   fireGame.on('value', function(result) {
-    game = result.val();
+    var fireResult = result.val();
+    game.season = fireResult.season;
+    game.title = fireResult.title;
     $('.season-number').text(game.season);
     mainDate.text('TACL ' + now.getFullYear() + ' S' + game.season + ' ' + pad(now.getMonth() + 1, 2) + '/' + pad(now.getDate(), 2));
   });
