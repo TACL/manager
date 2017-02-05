@@ -37,7 +37,7 @@ $(function() {
   var fireStates = database.ref('states');
 
   var monthArr = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-  var musicArr = ['firefly.mp3', 'spectre.mp3', 'eclipse.mp3', 'letgo.mp3'];
+  var musicArr = ['arrow.mp3','life.mp3','soundOfGoodbye.mp3','dusk.mp3'];
 
   var waitingCounter = 0;
   var noSoundTime = 0;
