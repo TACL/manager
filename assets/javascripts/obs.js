@@ -135,6 +135,20 @@ $(function() {
         break;
     }
   });
+  if (window.obsstudio) {
+    window.obsstudio.onVisibilityChange = function(visiblity) {
+      if (visiblity) {
+        if (game.scene === 'waiting') {
+          bgAudio[0].play();
+          bgAudio.stop(true, false).animate({volume: 0.15}, 1500);
+        }
+      } else {
+        bgAudio.stop(true, false).animate({volume: 0}, 1500, function() {
+          bgAudio[0].pause();
+        });
+      }
+    };
+  }
   fireStates.child('half').on('value', function(result) {
     game.half = result.val();
     switch (game.half) {
