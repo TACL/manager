@@ -143,7 +143,7 @@ $(function() {
           bgAudio.stop(true, false).animate({volume: 0.15}, 1500);
         }
       } else {
-        bgAudio.stop(true, false).animate({volume: 0}, 1500, function() {
+        bgAudio.stop(true, false).animate({volume: 0}, 700, function() {
           bgAudio[0].pause();
         });
       }
